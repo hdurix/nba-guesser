@@ -5,41 +5,46 @@ import com.github.hdurix.nbaguesser.error.domain.NumberValueTooLowException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import static com.github.hdurix.nbaguesser.domain.RandomizerFixture.makeTenNumbers;
+import java.util.Collection;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class RandomizerUnitTest {
-  @Test
-  void shouldNotRandomizeLessThanTen() {
-    assertThatThrownBy(() -> new Randomizer().tenOutOf(9))
+  @ParameterizedTest
+  @ValueSource(ints = {2, 5, 8} )
+  void shouldNotRandomizeLessThanTen(int number) {
+    assertThatThrownBy(() -> new Randomizer().tenOutOf(number))
       .isInstanceOf(NumberValueTooLowException.class)
       .hasMessageContaining("max")
       .hasMessageContaining("at least 10")
-      .hasMessageContaining("was 9");
+      .hasMessageContaining("was " + number);
   }
 
-  @Test
-  void shouldRandomize() {
-    int[] randomNumbers = new Randomizer().tenOutOf( 20);
+  @ParameterizedTest
+  @ValueSource(ints = {10, 20, 30} )
+  void shouldRandomize(int numbers) {
+    int[] randomNumbers = new Randomizer().tenOutOf(numbers);
 
     assertThat(randomNumbers)
       .hasSize(10)
-      .isNotEqualTo(new Randomizer().tenOutOf( 20));
+      .isNotEqualTo(new Randomizer().tenOutOf(numbers));
   }
 
   @ParameterizedTest
   @NullAndEmptySource
-  void shouldNotGetOneOfEmptyArray(int[] numbers) {
-    assertThatThrownBy(() -> new Randomizer().oneOf(numbers))
-        .isInstanceOf(MissingMandatoryValueException.class)
-        .hasMessageContaining("numbers");
+  void shouldNotGetOneOfEmptyCollection(List<Integer> collection) {
+    assertThatThrownBy(() -> new Randomizer().oneOf(collection))
+      .isInstanceOf(MissingMandatoryValueException.class)
+      .hasMessageContaining("collection");
   }
 
   @Test
-  void shouldGetRandomNumber() {
-    int[] numbers = makeTenNumbers();
+  void shouldGetRandomElement() {
+    Collection<Integer> numbers = List.of(0, 1,2,3,4,5);
 
     int randomNumber = new Randomizer().oneOf(numbers);
 

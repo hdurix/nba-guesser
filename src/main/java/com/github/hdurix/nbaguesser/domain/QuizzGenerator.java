@@ -1,7 +1,7 @@
 package com.github.hdurix.nbaguesser.domain;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class QuizzGenerator {
@@ -16,13 +16,20 @@ public class QuizzGenerator {
   }
 
   public void generate() {
-    List<Player> allPlayers = players.listAll().stream().toList();
-    int[] randomIndexes = randomizer.tenOutOf(allPlayers.size());
-    ArrayList<Player> playerList = new ArrayList<>();
-    Arrays.stream(randomIndexes).forEach(i -> playerList.add(allPlayers.get(i)));
+    Collection<Player> allPlayers = players.listAll();
+    int[] randomTenIndexes = randomizer.tenOutOf(allPlayers.size());
+    Collection<Player> suggestedPlayers = mapSuggestedPlayers(allPlayers, randomTenIndexes);
 
-    int correctId = randomizer.oneOf(randomIndexes);
+    this.quizzes.send(suggestedPlayers, pickCorrectPlayer(suggestedPlayers));
+  }
 
-    this.quizzes.send(playerList, playerList.stream().filter(player -> player.id() == correctId).findFirst().orElseThrow());
+  private static Collection<Player> mapSuggestedPlayers(Collection<Player> allPlayers, int[] indexes) {
+    List<Player> playerList = allPlayers.stream().toList();
+
+    return Arrays.stream(indexes).mapToObj(playerList::get).toList();
+  }
+
+  private Player pickCorrectPlayer(Collection<Player> suggestedPlayers) {
+    return randomizer.oneOf(suggestedPlayers);
   }
 }

@@ -3,7 +3,7 @@ package com.github.hdurix.nbaguesser.domain;
 import com.github.hdurix.nbaguesser.error.domain.Assert;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -15,11 +15,14 @@ public class Randomizer {
     return shuffle(IntStream.range(0, max)).stream().limit(10).mapToInt(Integer::intValue).toArray();
   }
 
-  public int oneOf(int[] numbers) {
-    Assert.notNull("numbers", numbers);
-    Assert.notEmpty("numbers", Arrays.stream(numbers).boxed().toList());
 
-    return shuffle(Arrays.stream(numbers)).get(0);
+  public <E>E oneOf(Collection<E> collection) {
+    Assert.notEmpty("collection", collection);
+
+    ArrayList<E> list = new ArrayList<>(collection);
+    Collections.shuffle(list);
+
+    return list.get(0);
   }
 
   private static List<Integer> shuffle(IntStream numbers) {
