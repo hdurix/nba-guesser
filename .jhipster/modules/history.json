@@ -1,0 +1,113 @@
+{
+  "actions" : [ {
+    "module" : "init",
+    "date" : "2023-01-28T13:39:50.336934152Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  }, {
+    "module" : "maven-java",
+    "date" : "2023-01-28T13:39:53.687631074Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  }, {
+    "module" : "prettier",
+    "date" : "2023-01-28T13:39:53.734846056Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  }, {
+    "module" : "github-actions",
+    "date" : "2023-01-28T13:39:53.751465845Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  }, {
+    "module" : "jacoco-check-min-coverage",
+    "date" : "2023-01-28T13:39:53.771116398Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  }, {
+    "module" : "java-base",
+    "date" : "2023-01-28T13:39:53.804130053Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  }, {
+    "module" : "spring-boot",
+    "date" : "2023-01-28T13:39:53.880200948Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  }, {
+    "module" : "spring-boot-devtools",
+    "date" : "2023-01-28T13:39:53.924657624Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  }, {
+    "module" : "spring-boot-mvc",
+    "date" : "2023-01-28T13:39:53.946233218Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  }, {
+    "module" : "java-archunit",
+    "date" : "2023-01-28T13:39:53.975079383Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  } ]
+}
