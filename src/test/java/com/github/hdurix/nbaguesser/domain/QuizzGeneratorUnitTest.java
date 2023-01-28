@@ -6,6 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collection;
+
 import static com.github.hdurix.nbaguesser.domain.PlayerFixture.makePlayer;
 import static com.github.hdurix.nbaguesser.domain.PlayerFixture.makePlayersWithIds;
 import static com.github.hdurix.nbaguesser.domain.PlayerFixture.makeTwentyPlayers;
@@ -28,9 +30,10 @@ class QuizzGeneratorUnitTest {
   @Test
   void shouldGenerate() {
     int[] playerIndexes = makeTenNumbers();
-    when(players.listAll()).thenReturn(makeTwentyPlayers());
+    Collection<Player> twentyPlayers = makeTwentyPlayers();
+    when(players.listAll()).thenReturn(twentyPlayers);
     when(randomizer.tenOutOf(20)).thenReturn(playerIndexes);
-    when(randomizer.oneOf(playerIndexes)).thenReturn(2);
+    when(randomizer.oneOf(makePlayersWithIds(playerIndexes))).thenReturn(makePlayer());
 
     quizzGenerator.generate();
 
