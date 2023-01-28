@@ -24,6 +24,7 @@
     <surefire-plugin.version>3.0.0-M8</surefire-plugin.version>
     <failsafe-plugin.version>3.0.0-M5</failsafe-plugin.version>
     <spring-boot.version>3.0.2</spring-boot.version>
+    <archunit-junit5.version>1.0.1</archunit-junit5.version>
   </properties>
 
   <dependencyManagement>
@@ -66,6 +67,13 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.tngtech.archunit</groupId>
+      <artifactId>archunit-junit5-api</artifactId>
+      <version>${archunit-junit5.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

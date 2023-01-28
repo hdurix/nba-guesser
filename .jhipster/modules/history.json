@@ -98,5 +98,16 @@
       "endOfLine" : "lf",
       "indentSize" : 2
     }
+  }, {
+    "module" : "java-archunit",
+    "date" : "2023-01-28T13:39:53.975079383Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
   } ]
 }
