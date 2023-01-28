@@ -109,5 +109,16 @@
       "endOfLine" : "lf",
       "indentSize" : 2
     }
+  }, {
+    "module" : "spring-boot-tomcat",
+    "date" : "2023-01-28T19:44:14.963302897Z",
+    "properties" : {
+      "endOfLine" : "lf",
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "serverPort" : 8080,
+      "indentSize" : 2,
+      "baseName" : "nbaGuesser"
+    }
   } ]
 }

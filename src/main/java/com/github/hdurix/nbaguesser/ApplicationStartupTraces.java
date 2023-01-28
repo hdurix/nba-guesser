@@ -1,5 +1,7 @@
 package com.github.hdurix.nbaguesser;
 
+import com.github.hdurix.nbaguesser.common.domain.Generated;
+import com.github.hdurix.nbaguesser.error.domain.Assert;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.stream.Collectors;
@@ -9,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
-import com.github.hdurix.nbaguesser.common.domain.Generated;
-import com.github.hdurix.nbaguesser.error.domain.Assert;
 
 final class ApplicationStartupTraces {
 

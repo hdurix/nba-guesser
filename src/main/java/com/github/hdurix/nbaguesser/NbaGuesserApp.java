@@ -1,12 +1,11 @@
 package com.github.hdurix.nbaguesser;
 
+import com.github.hdurix.nbaguesser.common.domain.Generated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.Environment;
-
-import com.github.hdurix.nbaguesser.common.domain.Generated;
 
 @SpringBootApplication
 @Generated(reason = "Not testing logs")

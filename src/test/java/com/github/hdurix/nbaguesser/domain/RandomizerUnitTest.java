@@ -1,21 +1,21 @@
 package com.github.hdurix.nbaguesser.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.github.hdurix.nbaguesser.error.domain.MissingMandatoryValueException;
 import com.github.hdurix.nbaguesser.error.domain.NumberValueTooLowException;
+import java.util.Collection;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Collection;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 class RandomizerUnitTest {
+
   @ParameterizedTest
-  @ValueSource(ints = {2, 5, 8} )
+  @ValueSource(ints = { 2, 5, 8 })
   void shouldNotRandomizeLessThanTen(int number) {
     assertThatThrownBy(() -> new Randomizer().tenOutOf(number))
       .isInstanceOf(NumberValueTooLowException.class)
@@ -25,13 +25,11 @@ class RandomizerUnitTest {
   }
 
   @ParameterizedTest
-  @ValueSource(ints = {10, 20, 30} )
+  @ValueSource(ints = { 10, 20, 30 })
   void shouldRandomize(int numbers) {
     int[] randomNumbers = new Randomizer().tenOutOf(numbers);
 
-    assertThat(randomNumbers)
-      .hasSize(10)
-      .isNotEqualTo(new Randomizer().tenOutOf(numbers));
+    assertThat(randomNumbers).hasSize(10).isNotEqualTo(new Randomizer().tenOutOf(numbers));
   }
 
   @ParameterizedTest
@@ -44,7 +42,7 @@ class RandomizerUnitTest {
 
   @Test
   void shouldGetRandomElement() {
-    Collection<Integer> numbers = List.of(0, 1,2,3,4,5);
+    Collection<Integer> numbers = List.of(0, 1, 2, 3, 4, 5);
 
     int randomNumber = new Randomizer().oneOf(numbers);
 
