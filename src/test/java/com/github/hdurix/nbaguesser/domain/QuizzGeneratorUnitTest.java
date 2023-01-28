@@ -1,13 +1,5 @@
 package com.github.hdurix.nbaguesser.domain;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Collection;
-
 import static com.github.hdurix.nbaguesser.domain.PlayerFixture.makePlayer;
 import static com.github.hdurix.nbaguesser.domain.PlayerFixture.makePlayersWithIds;
 import static com.github.hdurix.nbaguesser.domain.PlayerFixture.makeTwentyPlayers;
@@ -15,12 +7,22 @@ import static com.github.hdurix.nbaguesser.domain.RandomizerFixture.makeTenNumbe
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Collection;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 @ExtendWith(MockitoExtension.class)
 class QuizzGeneratorUnitTest {
+
   @Mock
   private Players players;
+
   @Mock
   private Quizzes quizzes;
+
   @Mock
   private Randomizer randomizer;
 

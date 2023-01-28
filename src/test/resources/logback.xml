@@ -32,6 +32,7 @@
   <logger name="com.sun" level="WARN" />
   <logger name="org.springframework" level="WARN" />
   <logger name="com.tngtech.archunit" level="WARN" />
+  <logger name="org.springframework.web" level="ERROR" />
   <!-- jhipster-needle-logback-add-log -->
 
   <root>
