@@ -1,0 +1,14 @@
+{
+  "actions" : [ {
+    "module" : "init",
+    "date" : "2023-01-28T13:39:50.336934152Z",
+    "properties" : {
+      "packageName" : "com.github.hdurix.nbaguesser",
+      "projectName" : "NBA Guesser",
+      "baseName" : "nbaGuesser",
+      "serverPort" : 8080,
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
+  } ]
+}
