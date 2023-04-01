@@ -12,7 +12,9 @@ public class Randomizer {
   public int[] tenOutOf(int max) {
     Assert.field("max", max).min(10);
 
-    return shuffle(IntStream.range(0, max)).stream().limit(10).mapToInt(Integer::intValue).toArray();
+    List<Integer> allNumbers = new ArrayList<>(IntStream.range(0, max).boxed().toList());
+    Collections.shuffle(allNumbers);
+    return allNumbers.stream().limit(10).mapToInt(Integer::intValue).toArray();
   }
 
   public <E> E oneOf(Collection<E> collection) {
@@ -22,11 +24,5 @@ public class Randomizer {
     Collections.shuffle(list);
 
     return list.get(0);
-  }
-
-  private static List<Integer> shuffle(IntStream numbers) {
-    List<Integer> allNumbers = new ArrayList<>(numbers.boxed().toList());
-    Collections.shuffle(allNumbers);
-    return allNumbers;
   }
 }

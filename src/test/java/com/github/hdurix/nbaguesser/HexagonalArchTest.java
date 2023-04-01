@@ -19,8 +19,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-
-//import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestController;
 
 @UnitTest
 class HexagonalArchTest {
@@ -208,10 +207,11 @@ class HexagonalArchTest {
         .because("Primary should not interact with secondary")
         .check(classes);
     }
-    //    @Test
-    //    void shouldNotHavePublicControllers() {
-    //      noClasses().that().areAnnotatedWith(RestController.class).or().areAnnotatedWith(Controller.class).should().bePublic().check(classes);
-    //    }
+
+    @Test
+    void shouldNotHavePublicControllers() {
+      noClasses().that().areAnnotatedWith(RestController.class).or().areAnnotatedWith(Controller.class).should().bePublic().check(classes);
+    }
   }
 
   @Nested

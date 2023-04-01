@@ -1,4 +1,4 @@
-package com.github.hdurix.nbaguesser.infrastructure.secondary;
+package com.github.hdurix.nbaguesser.infrastructure.secondary.telegram;
 
 import static com.github.hdurix.nbaguesser.domain.PlayerFixture.*;
 
