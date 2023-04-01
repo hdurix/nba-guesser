@@ -7,6 +7,7 @@ import static com.github.hdurix.nbaguesser.domain.RandomizerFixture.makeTenNumbe
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.github.hdurix.nbaguesser.UnitTest;
 import java.util.Collection;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+@UnitTest
 @ExtendWith(MockitoExtension.class)
 class QuizzGeneratorUnitTest {
 

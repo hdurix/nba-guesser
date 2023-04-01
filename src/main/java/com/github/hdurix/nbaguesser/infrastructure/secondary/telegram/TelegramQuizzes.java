@@ -1,4 +1,4 @@
-package com.github.hdurix.nbaguesser.infrastructure.secondary;
+package com.github.hdurix.nbaguesser.infrastructure.secondary.telegram;
 
 import com.github.hdurix.nbaguesser.domain.Player;
 import com.github.hdurix.nbaguesser.domain.Quizzes;
@@ -50,7 +50,7 @@ class TelegramQuizzes implements Quizzes {
   }
 
   private void sendPoll(Collection<Player> suggestedPlayers, Player correctPlayer) {
-    String options = "[" + suggestedPlayers.stream().map(toPlayerOption()).collect(Collectors.joining(",")) + "]";
+    String options = suggestedPlayers.stream().map(Player::fullName).collect(Collectors.joining("\",\"", "[\"", "\"]"));
 
     int correctOptionId = new ArrayList<>(suggestedPlayers).indexOf(correctPlayer);
 
@@ -70,6 +70,6 @@ class TelegramQuizzes implements Quizzes {
   }
 
   private static Function<Player, String> toPlayerOption() {
-    return player -> "\"" + player.firstName() + " " + player.lastName() + "\"";
+    return player -> "\"" + player.fullName() + "\"";
   }
 }

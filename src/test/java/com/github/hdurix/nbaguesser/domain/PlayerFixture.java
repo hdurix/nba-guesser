@@ -13,7 +13,7 @@ public class PlayerFixture {
   }
 
   public static Player makePlayer(int id) {
-    return new Player(id, "Nicolas", "Claxton");
+    return new Player(id, "Nic", "Claxton");
   }
 
   public static Collection<Player> makePlayersWithIds(int[] ids) {

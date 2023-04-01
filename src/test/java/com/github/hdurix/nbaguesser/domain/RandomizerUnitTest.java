@@ -3,6 +3,7 @@ package com.github.hdurix.nbaguesser.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.github.hdurix.nbaguesser.UnitTest;
 import com.github.hdurix.nbaguesser.error.domain.MissingMandatoryValueException;
 import com.github.hdurix.nbaguesser.error.domain.NumberValueTooLowException;
 import java.util.Collection;
@@ -12,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@UnitTest
 class RandomizerUnitTest {
 
   @ParameterizedTest

@@ -7,4 +7,8 @@ public record Player(int id, String firstName, String lastName) {
     Assert.notBlank("firstName", firstName);
     Assert.notBlank("lastName", lastName);
   }
+
+  public String fullName() {
+    return firstName + " " + lastName;
+  }
 }
