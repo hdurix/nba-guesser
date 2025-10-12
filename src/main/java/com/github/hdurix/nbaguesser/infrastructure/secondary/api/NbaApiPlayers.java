@@ -3,15 +3,14 @@ package com.github.hdurix.nbaguesser.infrastructure.secondary.api;
 import com.github.hdurix.nbaguesser.domain.Player;
 import com.github.hdurix.nbaguesser.domain.Players;
 import java.util.Collection;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
 @Repository
 class NbaApiPlayers implements Players {
 
+  public static final String PLAYERS_URL =
+    "https://gist.githubusercontent.com/hdurix/c83df92b0385c7d3d4c033bfd34e4909/raw/5788406b2ea5365eb6b7731c9cbc36d3db84d94f/nba-players.json";
   private final RestTemplate restTemplate;
 
   public NbaApiPlayers(RestTemplate restTemplate) {
@@ -20,13 +19,6 @@ class NbaApiPlayers implements Players {
 
   @Override
   public Collection<Player> listAll() {
-    String url = "http://data.nba.net/data/10s/prod/v1/2022/players.json";
-
-    HttpHeaders headers = new HttpHeaders();
-    headers.set("Accept", "*");
-
-    HttpEntity<Void> entity = new HttpEntity<>(headers);
-
-    return restTemplate.exchange(url, HttpMethod.GET, entity, ApiPlayersWrapper.class).getBody().toPlayers();
+    return restTemplate.getForObject(PLAYERS_URL, ApiPlayersWrapper.class).toPlayers();
   }
 }
