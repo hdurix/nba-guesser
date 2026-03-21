@@ -8,22 +8,18 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 class TelegramQuizzes implements Quizzes {
 
-  private final RestTemplate restTemplate;
+  private final RestClient restClient;
   private final String botId;
   private final String chatId;
 
-  public TelegramQuizzes(
-    RestTemplate restTemplate,
-    @Value("${telegram.bot_id}") String botId,
-    @Value("${telegram.chat_id}") String chatId
-  ) {
-    this.restTemplate = restTemplate;
+  public TelegramQuizzes(RestClient restClient, @Value("${telegram.bot_id}") String botId, @Value("${telegram.chat_id}") String chatId) {
+    this.restClient = restClient;
     this.botId = botId;
     this.chatId = chatId;
   }
@@ -36,8 +32,7 @@ class TelegramQuizzes implements Quizzes {
   }
 
   private void sendPhoto(Player correctPlayer) {
-    URI uri = UriComponentsBuilder
-      .fromUriString("https://api.telegram.org/bot")
+    URI uri = UriComponentsBuilder.fromUriString("https://api.telegram.org/bot")
       .path("{bot_id}/sendPhoto")
       .queryParam("chat_id", chatId)
       .queryParam("photo", "https://cdn.nba.com/headshots/nba/latest/1040x760/" + correctPlayer.id() + ".png")
@@ -45,7 +40,7 @@ class TelegramQuizzes implements Quizzes {
       .buildAndExpand(botId)
       .toUri();
 
-    restTemplate.getForEntity(uri, Object.class);
+    restClient.get().uri(uri).retrieve().toBodilessEntity();
   }
 
   private void sendPoll(Collection<Player> suggestedPlayers, Player correctPlayer) {
@@ -53,8 +48,7 @@ class TelegramQuizzes implements Quizzes {
 
     int correctOptionId = new ArrayList<>(suggestedPlayers).indexOf(correctPlayer);
 
-    URI uri = UriComponentsBuilder
-      .fromUriString("https://api.telegram.org/bot")
+    URI uri = UriComponentsBuilder.fromUriString("https://api.telegram.org/bot")
       .path("{bot_id}/sendPoll")
       .queryParam("chat_id", chatId)
       .queryParam("question", "Who is this player?")
@@ -65,6 +59,6 @@ class TelegramQuizzes implements Quizzes {
       .buildAndExpand(botId)
       .toUri();
 
-    restTemplate.getForEntity(uri, Object.class);
+    restClient.get().uri(uri).retrieve().toBodilessEntity();
   }
 }
