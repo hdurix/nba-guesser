@@ -1,6 +1,5 @@
 package com.github.hdurix.nbaguesser.domain;
 
-import com.github.hdurix.nbaguesser.NbaGuesserApp;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +25,7 @@ public class QuizzGenerator {
 
     Collection<Player> allPlayers = players.listAll();
 
-    log.info(allPlayers.size() + " players found");
+    log.info("{} players found", allPlayers.size());
 
     int[] randomTenIndexes = randomizer.tenOutOf(allPlayers.size());
     Collection<Player> suggestedPlayers = mapSuggestedPlayers(allPlayers, randomTenIndexes);
