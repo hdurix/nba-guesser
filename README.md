@@ -14,7 +14,7 @@ The application runs as a **Spring Boot CommandLineRunner (CLR)**: it boots, gen
 
 ## Prerequisites
 
-- Java 17
+- Java 25
 - Maven 3.6+
 - Node.js (for Prettier formatting)
 - Telegram bot credentials (`telegram.bot_id` and `telegram.chat_id`)
@@ -64,5 +64,3 @@ npx prettier --write .    # Fix formatting
 - [Assertions](documentation/assertions.md)
 - [Package types](documentation/package-types.md)
 - [LogsSpy](documentation/logs-spy.md)
-
-<!-- jhipster-needle-documentation -->

@@ -13,9 +13,10 @@ class RestClientConfiguration {
   @Bean
   RestClient restClient() {
     JacksonJsonHttpMessageConverter converter = new JacksonJsonHttpMessageConverter();
-    converter.setSupportedMediaTypes(List.of(MediaType.ALL));
+    converter.setSupportedMediaTypes(List.of(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM));
 
-    return RestClient.builder()
+    return RestClient
+      .builder()
       .messageConverters(converters -> {
         converters.clear();
         converters.add(converter);

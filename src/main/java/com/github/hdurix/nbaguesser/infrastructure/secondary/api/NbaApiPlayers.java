@@ -2,6 +2,7 @@ package com.github.hdurix.nbaguesser.infrastructure.secondary.api;
 
 import com.github.hdurix.nbaguesser.domain.Player;
 import com.github.hdurix.nbaguesser.domain.Players;
+import com.github.hdurix.nbaguesser.error.domain.Assert;
 import java.util.Collection;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestClient;
@@ -19,6 +20,8 @@ class NbaApiPlayers implements Players {
 
   @Override
   public Collection<Player> listAll() {
-    return restClient.get().uri(PLAYERS_URL).retrieve().body(ApiPlayersWrapper.class).toPlayers();
+    ApiPlayersWrapper wrapper = restClient.get().uri(PLAYERS_URL).retrieve().body(ApiPlayersWrapper.class);
+    Assert.notNull("players response", wrapper);
+    return wrapper.toPlayers();
   }
 }

@@ -26,7 +26,6 @@
     <failsafe-plugin.version>3.5.5</failsafe-plugin.version>
     <spring-boot.version>4.0.4</spring-boot.version>
     <archunit-junit5.version>1.4.1</archunit-junit5.version>
-    <reflections.version>0.10.2</reflections.version>
 
     <!-- Telegram test defaults (overridden by settings.xml locally) -->
     <nba-guesser-bot.telegram.bot-id>test-bot-id</nba-guesser-bot.telegram.bot-id>
@@ -53,30 +52,12 @@
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <optional>true</optional>
+      <artifactId>spring-boot-starter-json</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <scope>runtime</scope>
-      <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-validation</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
     </dependency>
 
     <dependency>
@@ -86,22 +67,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webmvc-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.tngtech.archunit</groupId>
       <artifactId>archunit-junit5-api</artifactId>
       <version>${archunit-junit5.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.reflections</groupId>
-      <artifactId>reflections</artifactId>
-      <version>${reflections.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -241,7 +209,7 @@
           <configuration>
             <rules>
               <requireMavenVersion>
-                <message>You are running an older version of Maven. JHipster requires at least Maven ${maven.version}</message>
+                <message>You are running an older version of Maven. Requires at least Maven ${maven.version}</message>
                 <version>[${maven.version},)</version>
               </requireMavenVersion>
               <requireJavaVersion>
