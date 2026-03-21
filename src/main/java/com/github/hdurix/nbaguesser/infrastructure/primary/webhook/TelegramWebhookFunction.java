@@ -1,8 +1,6 @@
 package com.github.hdurix.nbaguesser.infrastructure.primary.webhook;
 
 import com.github.hdurix.nbaguesser.application.QuizAnswerApplicationService;
-import com.github.hdurix.nbaguesser.domain.QuizAnswer;
-import java.time.Instant;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,15 +59,12 @@ class TelegramWebhookFunction implements Function<String, String> {
       return;
     }
 
-    QuizAnswer answer = QuizAnswer.builder()
-      .pollId(pollAnswer.poll_id())
-      .userId(pollAnswer.user().id())
-      .userName(pollAnswer.user().first_name())
-      .optionIndex(pollAnswer.option_ids().getFirst())
-      .timestamp(Instant.now())
-      .build();
-
-    quizAnswerApplicationService.save(answer);
+    quizAnswerApplicationService.save(
+      pollAnswer.poll_id(),
+      pollAnswer.user().id(),
+      pollAnswer.user().first_name(),
+      pollAnswer.option_ids().getFirst()
+    );
   }
 
   private void handleStatsCommand(TelegramUpdate update) {
