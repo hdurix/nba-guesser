@@ -1,39 +1,68 @@
 # NBA Guesser
 
-## Node.js and NPM
+Quiz game that fetches NBA players and sends quiz questions to a Telegram channel.
 
-Before you can build this project, you must install and configure the following dependencies on your machine:
+The application runs as a **Spring Boot CommandLineRunner (CLR)**: it boots, generates one quiz, sends it to Telegram, and exits.
 
-1. [Node.js](https://nodejs.org/): We use Node to run a development web server and build the project.
-   Depending on your system, you can install Node either from source or as a pre-packaged bundle.
+## How it works
 
-After installing Node, you should be able to run the following command to install development tools.
-You will only need to run this command when dependencies change in [package.json](package.json).
+1. Fetches all active NBA players from an external JSON source
+2. Randomly picks 10 players as quiz options
+3. Selects one as the correct answer
+4. Sends the player's headshot photo to a Telegram channel
+5. Sends a poll with the 10 player names (quiz mode, with the correct answer marked)
 
-```
+## Prerequisites
+
+- Java 17
+- Maven 3.6+
+- Node.js (for Prettier formatting)
+- Telegram bot credentials (`telegram.bot_id` and `telegram.chat_id`)
+
+## Setup
+
+Install Node.js dependencies (for formatting only):
+
+```bash
 npm install
 ```
 
-## Local environment
+Configure Telegram credentials in your Maven `~/.m2/settings.xml` (never committed):
 
-- [Local server](http://localhost:8080)
-
-<!-- jhipster-needle-localEnvironment -->
-
-## Start up
-
-```bash
-./mvnw
+```xml
+<profiles>
+  <profile>
+    <id>nba-guesser</id>
+    <properties>
+      <nba-guesser-bot.telegram.bot-id>YOUR_BOT_TOKEN</nba-guesser-bot.telegram.bot-id>
+      <nba-guesser-test.telegram.chat-id>YOUR_CHAT_ID</nba-guesser-test.telegram.chat-id>
+    </properties>
+  </profile>
+</profiles>
+<activeProfiles>
+  <activeProfile>nba-guesser</activeProfile>
+</activeProfiles>
 ```
 
-<!-- jhipster-needle-startupCommand -->
+These Maven properties are mapped to Spring's `telegram.bot_id` / `telegram.chat_id` via the failsafe plugin (see [Telegram integration](documentation/telegram.md)).
+
+## Commands
+
+```bash
+./mvnw                    # Run the app (generates and sends a quiz)
+./mvnw test               # Unit tests only
+./mvnw clean verify       # Full validation (tests + 100% coverage check)
+npx prettier --check .    # Check formatting
+npx prettier --write .    # Fix formatting
+```
 
 ## Documentation
 
-- [Package types](documentation/package-types.md)
+- [Architecture](documentation/architecture.md)
+- [NBA API integration](documentation/nba-api.md)
+- [Telegram integration](documentation/telegram.md)
 - [Assertions](documentation/assertions.md)
-- [Logs spy](documentation/logs-spy.md)
-- [Dev tools](documentation/dev-tools.md)
-- [CORS configuration](documentation/cors-configuration.md)
+- [Package types](documentation/package-types.md)
+- [LogsSpy](documentation/logs-spy.md)
 
 <!-- jhipster-needle-documentation -->
