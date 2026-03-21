@@ -1,10 +1,6 @@
 name: Deploy
 
 on:
-  workflow_run:
-    workflows: ['GitHub Actions']
-    types: [completed]
-    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -12,9 +8,6 @@ jobs:
     name: deploy
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    if: >
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
     permissions:
       id-token: write
       contents: read
