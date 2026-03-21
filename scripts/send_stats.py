@@ -98,7 +98,77 @@ def build_messages(data):
 
     msg3 = "\n".join(lines3)
 
-    return [msg1, msg2, msg3]
+    # Message 4: Analysis
+    players_list = list(rankings.items())
+    sorted_months = sorted(monthly.keys())
+
+    # Current streaks
+    streaks = {}
+    for name, _ in players_list:
+        streak = 0
+        for q in reversed(quizzes):
+            vote = next((v for v in q["votes"] if v["user_name"] == name), None)
+            if not vote:
+                break
+            if vote["option_index"] == q["correct_option_index"]:
+                streak += 1
+            else:
+                break
+        streaks[name] = streak
+
+    # Best month per player
+    best_months = {}
+    for name, _ in players_list:
+        best = None
+        for m in sorted_months:
+            s = monthly[m][name]
+            if s["total"] >= 10:
+                pct = s["correct"] / s["total"] * 100
+                if best is None or pct > best[1]:
+                    best = (m[5:] + "/" + m[2:4], pct)
+        best_months[name] = best
+
+    lines4 = ["💬 **ANALYSE**", ""]
+
+    # Top player
+    p1_name, p1 = players_list[0]
+    lines4.append(f"👑 **{p1_name}** domine avec {p1['accuracy']}% de réussite "
+                   f"et {round(p1['total']/len(quizzes)*100, 1)}% de participation.")
+    if streaks[p1_name] >= 3:
+        lines4.append(f"   En feu : {streaks[p1_name]} bonnes réponses d'affilée !")
+
+    # Others
+    p2_name, p2 = players_list[1]
+    bm = best_months.get(p2_name)
+    bm_str = f" Meilleur mois : {bm[0]} ({bm[1]:.0f}%)." if bm else ""
+    lines4.append(f"💪 **{p2_name}** solide à {p2['accuracy']}%.{bm_str}")
+
+    p3_name, p3 = players_list[2]
+    # Check progression
+    early = [m for m in sorted_months[:3]]
+    late = [m for m in sorted_months[-3:]]
+    early_avg = sum(monthly[m][p3_name]["correct"] / max(monthly[m][p3_name]["total"], 1) for m in early if monthly[m][p3_name]["total"] > 0) / max(sum(1 for m in early if monthly[m][p3_name]["total"] > 0), 1) * 100
+    late_avg = sum(monthly[m][p3_name]["correct"] / max(monthly[m][p3_name]["total"], 1) for m in late if monthly[m][p3_name]["total"] > 0) / max(sum(1 for m in late if monthly[m][p3_name]["total"] > 0), 1) * 100
+    if late_avg > early_avg + 5:
+        lines4.append(f"📈 **{p3_name}** en progression : de ~{early_avg:.0f}% à ~{late_avg:.0f}% !")
+    else:
+        lines4.append(f"🎯 **{p3_name}** régulier à {p3['accuracy']}%.")
+
+    if len(players_list) > 3:
+        p4_name, p4 = players_list[3]
+        part = round(p4["total"] / len(quizzes) * 100, 1)
+        lines4.append(f"🫡 **{p4_name}** : {part}% de participation, {p4['accuracy']}% de réussite. Courageux !")
+
+    # NBA fun facts
+    lines4.append("")
+    top3 = [n for n, _ in easiest[:3]]
+    bot3 = [n for n, _ in hardest[:3]]
+    lines4.append(f"Tout le monde reconnaît **{', '.join(top3[:2])}** ou **{top3[2]}**.")
+    lines4.append(f"Personne ne reconnaît **{', '.join(bot3[:2])}** ou **{bot3[2]}**.")
+
+    msg4 = "\n".join(lines4)
+
+    return [msg1, msg2, msg3, msg4]
 
 
 async def main():
