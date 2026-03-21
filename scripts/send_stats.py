@@ -52,21 +52,28 @@ def build_messages(data):
                 monthly[month][name]["correct"] += 1
 
     players = list(rankings.keys())
-    short_names = [p.split()[0][:6] for p in players]
+    initials = [p[0] for p in players]
+    # Handle duplicate initials
+    seen = {}
+    for i, ini in enumerate(initials):
+        if ini in seen:
+            initials[seen[ini]] = players[seen[ini]].split()[0][:3]
+            initials[i] = players[i].split()[0][:3]
+        seen[ini] = i
 
     lines2 = ["📈 **ÉVOLUTION MENSUELLE**", "", "```"]
-    header = f"{'Mois':<8}" + "".join(f"{n:>8}" for n in short_names)
+    header = "     " + " ".join(f"{n:>5}" for n in initials)
     lines2.append(header)
-    lines2.append("-" * len(header))
     for month in sorted(monthly.keys()):
+        m = month[2:4] + "/" + month[5:]
         vals = []
         for p in players:
             s = monthly[month][p]
             if s["total"] > 0:
-                vals.append(f"{s['correct']/s['total']*100:>7.0f}%")
+                vals.append(f"{s['correct']/s['total']*100:>4.0f}%")
             else:
-                vals.append(f"{'—':>8}")
-        lines2.append(f"{month:<8}" + "".join(vals))
+                vals.append(f"{'—':>5}")
+        lines2.append(f"{m:<5}" + " ".join(vals))
     lines2.append("```")
 
     msg2 = "\n".join(lines2)
