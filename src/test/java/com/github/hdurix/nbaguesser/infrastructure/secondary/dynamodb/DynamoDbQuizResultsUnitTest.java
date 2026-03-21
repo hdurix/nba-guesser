@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 
 import com.github.hdurix.nbaguesser.UnitTest;
 import com.github.hdurix.nbaguesser.domain.QuizResult;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -87,5 +88,65 @@ class DynamoDbQuizResultsUnitTest {
     verify(dynamoDbClient).scan(captor.capture());
     assertThat(captor.getValue().tableName()).isEqualTo("nba-guesser-quizzes");
     assertThat(captor.getValue().filterExpression()).isEqualTo("chat_id = :chatId");
+  }
+
+  @Test
+  void shouldParseLegacyDateFormat() {
+    Map<String, AttributeValue> item = Map.of(
+      "poll_id",
+      AttributeValue.builder().s("poll1").build(),
+      "chat_id",
+      AttributeValue.builder().s("456").build(),
+      "date",
+      AttributeValue.builder().s("2024-12-10T06:31:01+00:00").build(),
+      "options",
+      AttributeValue.builder().l(List.of(AttributeValue.builder().s("Player A").build())).build(),
+      "correct_option_index",
+      AttributeValue.builder().n("0").build(),
+      "correct_answer",
+      AttributeValue.builder().s("Player A").build(),
+      "message_id",
+      AttributeValue.builder().n("1").build()
+    );
+    when(dynamoDbClient.scan(any(ScanRequest.class))).thenReturn(ScanResponse.builder().items(List.of(item)).build());
+
+    List<QuizResult> results = dynamoDbQuizResults.findByChatId("456");
+
+    assertThat(results).hasSize(1);
+    assertThat(results.getFirst().date().toString()).isEqualTo("2024-12-10");
+  }
+
+  @Test
+  void shouldSkipItemsWithoutCorrectOptionIndex() {
+    Map<String, AttributeValue> validItem = Map.of(
+      "poll_id",
+      AttributeValue.builder().s("poll1").build(),
+      "chat_id",
+      AttributeValue.builder().s("456").build(),
+      "date",
+      AttributeValue.builder().s("2026-03-21").build(),
+      "options",
+      AttributeValue.builder().l(List.of(AttributeValue.builder().s("Player A").build())).build(),
+      "correct_option_index",
+      AttributeValue.builder().n("0").build(),
+      "correct_answer",
+      AttributeValue.builder().s("Player A").build(),
+      "message_id",
+      AttributeValue.builder().n("1").build()
+    );
+    Map<String, AttributeValue> legacyItem = new HashMap<>();
+    legacyItem.put("poll_id", AttributeValue.builder().s("poll2").build());
+    legacyItem.put("chat_id", AttributeValue.builder().s("456").build());
+    legacyItem.put("date", AttributeValue.builder().s("2024-01-01T00:00:00+00:00").build());
+    legacyItem.put("correct_answer", AttributeValue.builder().s("?").build());
+    legacyItem.put("message_id", AttributeValue.builder().n("2").build());
+    legacyItem.put("options", AttributeValue.builder().l(List.of(AttributeValue.builder().s("A").build())).build());
+
+    when(dynamoDbClient.scan(any(ScanRequest.class))).thenReturn(ScanResponse.builder().items(List.of(validItem, legacyItem)).build());
+
+    List<QuizResult> results = dynamoDbQuizResults.findByChatId("456");
+
+    assertThat(results).hasSize(1);
+    assertThat(results.getFirst().pollId()).isEqualTo("poll1");
   }
 }
