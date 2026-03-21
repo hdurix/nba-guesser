@@ -1,6 +1,7 @@
 package com.github.hdurix.nbaguesser.infrastructure.primary.webhook;
 
 import com.github.hdurix.nbaguesser.application.QuizAnswerApplicationService;
+import com.github.hdurix.nbaguesser.application.StatsApplicationService;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +15,16 @@ class TelegramWebhookFunction implements Function<String, String> {
 
   private final ObjectMapper objectMapper;
   private final QuizAnswerApplicationService quizAnswerApplicationService;
+  private final StatsApplicationService statsApplicationService;
 
-  TelegramWebhookFunction(ObjectMapper objectMapper, QuizAnswerApplicationService quizAnswerApplicationService) {
+  TelegramWebhookFunction(
+    ObjectMapper objectMapper,
+    QuizAnswerApplicationService quizAnswerApplicationService,
+    StatsApplicationService statsApplicationService
+  ) {
     this.objectMapper = objectMapper;
     this.quizAnswerApplicationService = quizAnswerApplicationService;
+    this.statsApplicationService = statsApplicationService;
   }
 
   @Override
@@ -63,7 +70,8 @@ class TelegramWebhookFunction implements Function<String, String> {
   }
 
   private void handleStatsCommand(TelegramUpdate update) {
-    log.info("Stats command received from user_id={} in chat_id={}", update.message().from().id(), update.message().chat().id());
-    // TODO HDU-12: query DynamoDB and return stats
+    long chatId = update.message().chat().id();
+    log.info("Stats command received from user_id={} in chat_id={}", update.message().from().id(), chatId);
+    statsApplicationService.sendStats(String.valueOf(chatId));
   }
 }
