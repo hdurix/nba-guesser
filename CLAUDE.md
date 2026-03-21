@@ -1,23 +1,25 @@
 # NBA Guesser
 
-Quiz game that fetches NBA players from the NBA API and sends quiz questions to Telegram.
+CommandLineRunner (CLR) quiz game: fetches NBA players, generates a quiz, sends it to Telegram, then exits.
 
 ## Tech Stack
 
 - **Backend**: Spring Boot 3.0.2, Java 17, Maven
+- **Mode**: CommandLineRunner (no web server — `spring.main.web-application-type=NONE`)
 - **Architecture**: Hexagonal (ports & adapters), DDD
 
 ## Architecture
 
 ```
 com.github.hdurix.nbaguesser/
-├── domain/           — Pure business logic, no framework dependencies
-├── application/      — Use cases, orchestration
+├── domain/           — Pure business logic (Player, Players, Quizzes, QuizzGenerator, Randomizer)
+├── application/      — Use case orchestration (PlayersApplicationService)
 ├── infrastructure/
-│   └── secondary/    — Outbound adapters (NBA API, Telegram)
-├── security/         — Cross-cutting (CORS)
+│   └── secondary/
+│       ├── api/      — NBA player data adapter (NbaApiPlayers, ApiPlayersWrapper, ApiResultSet)
+│       └── telegram/ — Telegram quiz adapter (TelegramQuizzes)
 ├── error/            — Domain exceptions + REST error handlers
-└── common/           — Shared utilities (Assert, etc.)
+└── common/           — Shared utilities (Assert, Generated, etc.)
 ```
 
 Bounded context markers: `@BusinessContext` / `@SharedKernel` annotations on `package-info.java`.
@@ -27,8 +29,8 @@ Bounded context markers: `@BusinessContext` / `@SharedKernel` annotations on `pa
 - Value objects: Java records with `Assert` validation in compact constructor
 - Domain interfaces: simple names (`Players`, `Quizzes`) — no suffix
 - Application services: `@Service`, constructor-based DI
-- External API DTOs: prefixed with `Api` (`ApiPlayer`, `ApiLeague`), mapped to domain objects
-- Controllers: package-private
+- External API DTOs: prefixed with `Api` (`ApiPlayer`, `ApiResultSet`), mapped to domain objects
+- Adapters: package-private
 - All naming in English
 
 ## Testing
