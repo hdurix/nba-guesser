@@ -76,14 +76,14 @@ Every day at **06:30 UTC** (08:30 Paris), an **EventBridge** cron rule triggers 
 
 ### AWS Resources
 
-| Service             | Resource                                         | Purpose                                  |
-| ------------------- | ------------------------------------------------ | ---------------------------------------- |
-| **ECR**             | `nba-guesser-images`                             | Docker image repository                  |
-| **ECS**             | Cluster `nba-guessers`, task def `nba-guesser:4` | Runs the container on Fargate            |
-| **EventBridge**     | Rule `nba-guesser` (`cron(30 6 * * ? *)`)        | Daily scheduling (only active rule)      |
-| **CloudWatch Logs** | `/ecs/nba-guessers`                              | Container logs                           |
-| **IAM**             | `ecsTaskExecutionRole`, `ecsEventsRole`          | ECS task execution + EventBridge trigger |
-| **DynamoDB**        | `nba-guesser-quizzes` (PK: `poll_id`)            | Quiz metadata (date, options, correct answer)    |
+| Service             | Resource                                             | Purpose                                       |
+| ------------------- | ---------------------------------------------------- | --------------------------------------------- |
+| **ECR**             | `nba-guesser-images`                                 | Docker image repository                       |
+| **ECS**             | Cluster `nba-guessers`, task def `nba-guesser:4`     | Runs the container on Fargate                 |
+| **EventBridge**     | Rule `nba-guesser` (`cron(30 6 * * ? *)`)            | Daily scheduling (only active rule)           |
+| **CloudWatch Logs** | `/ecs/nba-guessers`                                  | Container logs                                |
+| **IAM**             | `ecsTaskExecutionRole`, `ecsEventsRole`              | ECS task execution + EventBridge trigger      |
+| **DynamoDB**        | `nba-guesser-quizzes` (PK: `poll_id`)                | Quiz metadata (date, options, correct answer) |
 | **DynamoDB**        | `nba-guesser-answers` (PK: `poll_id`, SK: `user_id`) | Player answers (user_name, option, timestamp) |
 
 ### Other EventBridge rules (all DISABLED)
