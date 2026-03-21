@@ -13,7 +13,7 @@ class ApiResultSet {
   private static final int PLAYER_ID_INDEX = 0;
   private static final int LAST_NAME_INDEX = 1;
   private static final int FIRST_NAME_INDEX = 2;
-  private static final int ROSTER_STATUS_INDEX = 19;
+  private static final int ROSTER_STATUS_INDEX = 3;
 
   private static final Set<String> ACTIVE_ROSTER_STATUSES = Set.of("1", "1.0");
 

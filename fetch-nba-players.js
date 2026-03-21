@@ -87,8 +87,11 @@ const req = https.request(options, res => {
       const rowSet = data.resultSets[0].rowSet;
       const activeCount = rowSet.filter(row => row[19] === 1.0).length;
 
+      // Keep only used columns: id (0), lastName (1), firstName (2), rosterStatus (19)
+      data.resultSets[0].rowSet = rowSet.map(row => [row[0], row[1], row[2], row[19]]);
+
       const outputPath = path.join(__dirname, 'nba-players.json');
-      fs.writeFileSync(outputPath, JSON.stringify(data, null, 2));
+      fs.writeFileSync(outputPath, JSON.stringify(data));
 
       console.log(`Total players: ${rowSet.length}`);
       console.log(`Active players (roster status 1.0): ${activeCount}`);
