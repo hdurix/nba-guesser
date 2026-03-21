@@ -5,6 +5,7 @@
 /target/classes/static/**
 scripts/*.session
 scripts/.venv/
+scripts/.env
 results.json
 /src/test/javascript/coverage/
 nba-players.json
