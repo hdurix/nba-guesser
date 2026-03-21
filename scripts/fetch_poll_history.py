@@ -90,13 +90,16 @@ async def main():
     api_hash = os.environ.get("TELEGRAM_API_HASH")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID")
 
+    phone = os.environ.get("TELEGRAM_PHONE")
+
     if not all([api_id, api_hash, chat_id]):
         print("Error: set TELEGRAM_API_ID, TELEGRAM_API_HASH, TELEGRAM_CHAT_ID", file=sys.stderr)
         print("Get API credentials at https://my.telegram.org", file=sys.stderr)
         sys.exit(1)
 
+    print("Starting Telegram client...", file=sys.stderr, flush=True)
     client = TelegramClient(SESSION_FILE, int(api_id), api_hash)
-    await client.start()
+    await client.start(phone=phone if phone else lambda: input("Phone number (e.g. +33...): "))
 
     try:
         chat = await client.get_entity(int(chat_id))
