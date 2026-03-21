@@ -1,7 +1,7 @@
 package com.github.hdurix.nbaguesser.infrastructure.primary.webhook;
 
+import com.github.hdurix.nbaguesser.application.QuizAnswerApplicationService;
 import com.github.hdurix.nbaguesser.domain.QuizAnswer;
-import com.github.hdurix.nbaguesser.domain.QuizAnswers;
 import java.time.Instant;
 import java.util.function.Function;
 import org.slf4j.Logger;
@@ -15,11 +15,11 @@ class TelegramWebhookFunction implements Function<String, String> {
   private static final Logger log = LoggerFactory.getLogger(TelegramWebhookFunction.class);
 
   private final ObjectMapper objectMapper;
-  private final QuizAnswers quizAnswers;
+  private final QuizAnswerApplicationService quizAnswerApplicationService;
 
-  TelegramWebhookFunction(ObjectMapper objectMapper, QuizAnswers quizAnswers) {
+  TelegramWebhookFunction(ObjectMapper objectMapper, QuizAnswerApplicationService quizAnswerApplicationService) {
     this.objectMapper = objectMapper;
-    this.quizAnswers = quizAnswers;
+    this.quizAnswerApplicationService = quizAnswerApplicationService;
   }
 
   @Override
@@ -69,7 +69,7 @@ class TelegramWebhookFunction implements Function<String, String> {
       .timestamp(Instant.now())
       .build();
 
-    quizAnswers.save(answer);
+    quizAnswerApplicationService.save(answer);
   }
 
   private void handleStatsCommand(TelegramUpdate update) {
