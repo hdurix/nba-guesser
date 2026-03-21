@@ -6,17 +6,19 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class QuizzGenerator {
+public class QuizGenerator {
 
-  private static final Logger log = LoggerFactory.getLogger(QuizzGenerator.class);
+  private static final Logger log = LoggerFactory.getLogger(QuizGenerator.class);
 
   private final Players players;
   private final Quizzes quizzes;
+  private final QuizResults quizResults;
   private final Randomizer randomizer;
 
-  public QuizzGenerator(Players players, Quizzes quizzes, Randomizer randomizer) {
+  public QuizGenerator(Players players, Quizzes quizzes, QuizResults quizResults, Randomizer randomizer) {
     this.players = players;
     this.quizzes = quizzes;
+    this.quizResults = quizResults;
     this.randomizer = randomizer;
   }
 
@@ -30,7 +32,8 @@ public class QuizzGenerator {
     int[] randomTenIndexes = randomizer.tenOutOf(allPlayers.size());
     Collection<Player> suggestedPlayers = mapSuggestedPlayers(allPlayers, randomTenIndexes);
 
-    this.quizzes.send(suggestedPlayers, pickCorrectPlayer(suggestedPlayers));
+    QuizResult result = this.quizzes.send(suggestedPlayers, pickCorrectPlayer(suggestedPlayers));
+    this.quizResults.save(result);
   }
 
   private static Collection<Player> mapSuggestedPlayers(Collection<Player> allPlayers, int[] indexes) {

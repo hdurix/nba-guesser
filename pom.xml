@@ -28,6 +28,7 @@
     <archunit-junit5.version>1.4.1</archunit-junit5.version>
     <spring-cloud.version>2025.1.1</spring-cloud.version>
     <shade-plugin.version>3.6.0</shade-plugin.version>
+    <aws-sdk.version>2.31.9</aws-sdk.version>
 
     <!-- Telegram test defaults (overridden by settings.xml locally) -->
     <nba-guesser-bot.telegram.bot-id>test-bot-id</nba-guesser-bot.telegram.bot-id>
@@ -50,6 +51,13 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bom</artifactId>
+        <version>${aws-sdk.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -67,6 +75,11 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-web</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>dynamodb</artifactId>
     </dependency>
 
     <dependency>

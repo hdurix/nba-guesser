@@ -1,10 +1,12 @@
 package com.github.hdurix.nbaguesser.infrastructure.secondary.telegram;
 
 import static com.github.hdurix.nbaguesser.domain.PlayerFixture.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
 import com.github.hdurix.nbaguesser.UnitTest;
+import com.github.hdurix.nbaguesser.domain.QuizResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
@@ -36,10 +38,15 @@ class TelegramQuizzesUnitTest {
       .expect(requestTo("https://api.telegram.org/bot123:abc/sendPoll"))
       .andExpect(method(HttpMethod.POST))
       .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-      .andRespond(withSuccess());
+      .andRespond(withSuccess("{\"ok\":true,\"result\":{\"message_id\":123,\"poll\":{\"id\":\"5678\"}}}", MediaType.APPLICATION_JSON));
 
-    telegramQuizzes.send(makeSuggestedPlayers(), makePlayer());
+    QuizResult result = telegramQuizzes.send(makeSuggestedPlayers(), makePlayer());
 
     server.verify();
+    assertThat(result.pollId()).isEqualTo("5678");
+    assertThat(result.messageId()).isEqualTo(123L);
+    assertThat(result.options()).hasSize(10);
+    assertThat(result.correctOptionIndex()).isEqualTo(2);
+    assertThat(result.correctAnswer()).isEqualTo("Nic Claxton");
   }
 }
