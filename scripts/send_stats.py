@@ -10,7 +10,7 @@ from collections import defaultdict
 from telethon import TelegramClient
 
 SESSION_FILE = os.path.join(os.path.dirname(__file__), "nba_guesser_session")
-RESULTS_FILE = os.path.join(os.path.dirname(__file__), "..", "results.json")
+RESULTS_FILE = "/tmp/nba-guesser-results.json"
 
 
 def build_messages(data):

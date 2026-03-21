@@ -29,7 +29,7 @@ from telethon.tl.functions.messages import GetPollVotesRequest
 from telethon.tl.types import MessageMediaPoll, MessagePeerVote, MessagePeerVoteMultiple, PeerUser
 
 SESSION_FILE = os.path.join(os.path.dirname(__file__), "nba_guesser_session")
-OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "..", "results.json")
+OUTPUT_FILE = "/tmp/nba-guesser-results.json"
 
 quizzes = []
 interrupted = False
