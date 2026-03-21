@@ -25,7 +25,7 @@ from datetime import datetime, timezone
 
 from telethon import TelegramClient
 from telethon.tl.functions.messages import GetPollVotesRequest
-from telethon.tl.types import MessageMediaPoll, MessageUserVote, MessageUserVoteMultiple
+from telethon.tl.types import MessageMediaPoll, MessagePeerVote, MessagePeerVoteMultiple, PeerUser
 
 SESSION_FILE = os.path.join(os.path.dirname(__file__), "nba_guesser_session")
 
@@ -56,25 +56,26 @@ async def get_votes(client, peer, msg_id, answers):
         user_map = {u.id: u for u in result.users}
 
         for v in result.votes:
-            user = user_map.get(v.user_id)
+            uid = v.peer.user_id if isinstance(v.peer, PeerUser) else None
+            user = user_map.get(uid) if uid else None
             name = ""
             if user:
                 name = " ".join(filter(None, [user.first_name, user.last_name]))
 
             opt_idx = None
-            if isinstance(v, MessageUserVote):
+            if isinstance(v, MessagePeerVote):
                 for i, a in enumerate(answers):
                     if a.option == v.option:
                         opt_idx = i
                         break
-            elif isinstance(v, MessageUserVoteMultiple):
+            elif isinstance(v, MessagePeerVoteMultiple):
                 if v.options:
                     for i, a in enumerate(answers):
                         if a.option == v.options[0]:
                             opt_idx = i
                             break
 
-            votes.append({"user_id": v.user_id, "user_name": name, "option_index": opt_idx})
+            votes.append({"user_id": uid, "user_name": name, "option_index": opt_idx})
 
         if not getattr(result, "next_offset", None):
             break
