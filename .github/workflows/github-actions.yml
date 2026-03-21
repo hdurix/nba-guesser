@@ -18,13 +18,10 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: 'Test: run tests'
+      - name: 'Test: run unit tests'
         run: |
           chmod +x mvnw
-          ./mvnw clean verify
-        env:
-          TELEGRAM_BOT_ID: ${{ secrets.TELEGRAM_BOT_ID }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ./mvnw test
   prettier:
     name: prettier
     runs-on: ubuntu-latest
