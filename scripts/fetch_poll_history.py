@@ -19,6 +19,7 @@ Usage:
 import asyncio
 import json
 import os
+import signal
 import sys
 from collections import defaultdict
 from datetime import datetime, timezone
@@ -28,6 +29,19 @@ from telethon.tl.functions.messages import GetPollVotesRequest
 from telethon.tl.types import MessageMediaPoll, MessagePeerVote, MessagePeerVoteMultiple, PeerUser
 
 SESSION_FILE = os.path.join(os.path.dirname(__file__), "nba_guesser_session")
+OUTPUT_FILE = os.path.join(os.path.dirname(__file__), "..", "results.json")
+
+quizzes = []
+interrupted = False
+
+
+def handle_interrupt(sig, frame):
+    global interrupted
+    print("\n  Interrupted! Writing collected data...", file=sys.stderr)
+    interrupted = True
+
+
+signal.signal(signal.SIGINT, handle_interrupt)
 
 
 def extract_text(value):
@@ -35,6 +49,42 @@ def extract_text(value):
     if hasattr(value, "text"):
         return value.text
     return str(value)
+
+
+def write_results():
+    data = list(reversed(quizzes))  # chronological order
+
+    player_stats = defaultdict(lambda: {"correct": 0, "total": 0})
+    for q in data:
+        for v in q["votes"]:
+            key = v["user_name"] or str(v["user_id"])
+            player_stats[key]["total"] += 1
+            if v["option_index"] == q["correct_option_index"]:
+                player_stats[key]["correct"] += 1
+
+    rankings = {
+        name: {
+            **s,
+            "accuracy": round(s["correct"] / s["total"] * 100, 1) if s["total"] > 0 else 0,
+        }
+        for name, s in sorted(player_stats.items(), key=lambda x: x[1]["correct"], reverse=True)
+    }
+
+    output = {
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+        "total_quizzes": len(data),
+        "rankings": rankings,
+        "quizzes": data,
+    }
+
+    with open(OUTPUT_FILE, "w") as f:
+        json.dump(output, f, indent=2, ensure_ascii=False)
+
+    print(f"\nResults written to {OUTPUT_FILE}", file=sys.stderr)
+    print(f"Total: {len(data)} quizzes", file=sys.stderr)
+    print("Rankings:", file=sys.stderr)
+    for name, s in rankings.items():
+        print(f"  {name}: {s['correct']}/{s['total']} ({s['accuracy']}%)", file=sys.stderr)
 
 
 async def get_votes(client, peer, msg_id, answers):
@@ -89,7 +139,6 @@ async def main():
     api_id = os.environ.get("TELEGRAM_API_ID")
     api_hash = os.environ.get("TELEGRAM_API_HASH")
     chat_id = os.environ.get("TELEGRAM_CHAT_ID")
-
     phone = os.environ.get("TELEGRAM_PHONE")
 
     if not all([api_id, api_hash, chat_id]):
@@ -108,10 +157,12 @@ async def main():
 
     print("Connected. Scanning chat history...", file=sys.stderr)
 
-    quizzes = []
     n = 0
 
     async for msg in client.iter_messages(chat):
+        if interrupted:
+            break
+
         if not isinstance(getattr(msg, "media", None), MessageMediaPoll):
             continue
 
@@ -154,41 +205,7 @@ async def main():
 
         await asyncio.sleep(0.5)
 
-    quizzes.reverse()  # chronological order
-
-    # Compute per-player stats
-    player_stats = defaultdict(lambda: {"correct": 0, "total": 0})
-    for q in quizzes:
-        for v in q["votes"]:
-            key = v["user_name"] or str(v["user_id"])
-            player_stats[key]["total"] += 1
-            if v["option_index"] == q["correct_option_index"]:
-                player_stats[key]["correct"] += 1
-
-    rankings = {
-        name: {
-            **s,
-            "accuracy": round(s["correct"] / s["total"] * 100, 1) if s["total"] > 0 else 0,
-        }
-        for name, s in sorted(player_stats.items(), key=lambda x: x[1]["correct"], reverse=True)
-    }
-
-    output = {
-        "exported_at": datetime.now(timezone.utc).isoformat(),
-        "total_quizzes": len(quizzes),
-        "rankings": rankings,
-        "quizzes": quizzes,
-    }
-
-    print(json.dumps(output, indent=2, ensure_ascii=False))
-
-    # Summary
-    print(f"\n{'=' * 50}", file=sys.stderr)
-    print(f"Total: {len(quizzes)} quizzes", file=sys.stderr)
-    print("Rankings:", file=sys.stderr)
-    for name, s in rankings.items():
-        print(f"  {name}: {s['correct']}/{s['total']} ({s['accuracy']}%)", file=sys.stderr)
-
+    write_results()
     await client.disconnect()
 
 
