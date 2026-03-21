@@ -70,23 +70,47 @@ The app runs on **AWS** (`eu-west-3` / Paris), account `301722318422`.
 
 ### How it works
 
-Every day at **06:30 UTC** (08:30 Paris), an **EventBridge** cron rule triggers an **ECS Fargate** task:
+**Daily quiz (ECS Fargate)**: Every day at **06:30 UTC** (08:30 Paris), an **EventBridge** cron rule triggers an **ECS Fargate** task:
 
 1. EventBridge rule `nba-guesser` fires
 2. ECS cluster `nba-guessers` starts a Fargate task (0.5 vCPU, 1 GB RAM)
 3. The container (from ECR `nba-guesser-images:latest`) boots Spring Boot, fetches NBA players, sends a Telegram quiz, then exits
 
+**Telegram webhook (Lambda)**: Telegram sends updates (poll answers, messages) to an **API Gateway HTTP API**, which invokes a **Lambda** function:
+
+1. Telegram sends a POST to `https://2mamsx798j.execute-api.eu-west-3.amazonaws.com/webhook`
+2. API Gateway HTTP API routes to Lambda `nba-guesser-webhook`
+3. Spring Cloud Function adapter (`FunctionInvoker`) invokes `TelegramWebhookFunction`
+4. The function parses the Telegram update and handles poll answers / stats commands
+
 ### AWS Resources
 
-| Service             | Resource                                             | Purpose                                       |
-| ------------------- | ---------------------------------------------------- | --------------------------------------------- |
-| **ECR**             | `nba-guesser-images`                                 | Docker image repository                       |
-| **ECS**             | Cluster `nba-guessers`, task def `nba-guesser:4`     | Runs the container on Fargate                 |
-| **EventBridge**     | Rule `nba-guesser` (`cron(30 6 * * ? *)`)            | Daily scheduling (only active rule)           |
-| **CloudWatch Logs** | `/ecs/nba-guessers`                                  | Container logs                                |
-| **IAM**             | `ecsTaskExecutionRole`, `ecsEventsRole`              | ECS task execution + EventBridge trigger      |
-| **DynamoDB**        | `nba-guesser-quizzes` (PK: `poll_id`)                | Quiz metadata (date, options, correct answer) |
-| **DynamoDB**        | `nba-guesser-answers` (PK: `poll_id`, SK: `user_id`) | Player answers (user_name, option, timestamp) |
+| Service             | Resource                                              | Purpose                                       |
+| ------------------- | ----------------------------------------------------- | --------------------------------------------- |
+| **ECR**             | `nba-guesser-images`                                  | Docker image repository                       |
+| **ECS**             | Cluster `nba-guessers`, task def `nba-guesser:4`      | Runs the container on Fargate                 |
+| **EventBridge**     | Rule `nba-guesser` (`cron(30 6 * * ? *)`)             | Daily scheduling (only active rule)           |
+| **Lambda**          | `nba-guesser-webhook` (container image, 1024 MB, 60s) | Telegram webhook handler                      |
+| **API Gateway**     | HTTP API `nba-guesser-webhook` (ID: `2mamsx798j`)     | `POST /webhook` → Lambda                      |
+| **CloudWatch Logs** | `/ecs/nba-guessers`                                   | ECS container logs                            |
+| **CloudWatch Logs** | `/aws/lambda/nba-guesser-webhook`                     | Lambda function logs                          |
+| **IAM**             | `ecsTaskExecutionRole`, `ecsEventsRole`               | ECS task execution + EventBridge trigger      |
+| **DynamoDB**        | `nba-guesser-quizzes` (PK: `poll_id`)                 | Quiz metadata (date, options, correct answer) |
+| **DynamoDB**        | `nba-guesser-answers` (PK: `poll_id`, SK: `user_id`)  | Player answers (user_name, option, timestamp) |
+
+### Telegram Webhook
+
+The webhook is registered once (URL is stable). To re-register:
+
+```bash
+curl "https://api.telegram.org/bot${TELEGRAM_BOT_ID}/setWebhook?url=https://2mamsx798j.execute-api.eu-west-3.amazonaws.com/webhook&allowed_updates=%5B%22poll_answer%22%2C%22message%22%5D"
+```
+
+Check webhook status:
+
+```bash
+curl "https://api.telegram.org/bot${TELEGRAM_BOT_ID}/getWebhookInfo"
+```
 
 ### Other EventBridge rules (all DISABLED)
 
@@ -94,11 +118,22 @@ Every day at **06:30 UTC** (08:30 Paris), an **EventBridge** cron rule triggers 
 - `nba-guesser-safe` — `cron(45 5 * * ? *)` — targeted a different Telegram group
 - `guesser-test` / `test` — test rules
 
+### Lambda Environment Variables
+
+| Variable                           | Value                                        |
+| ---------------------------------- | -------------------------------------------- |
+| `MAIN_CLASS`                       | `com.github.hdurix.nbaguesser.NbaGuesserApp` |
+| `SPRING_CLOUD_FUNCTION_DEFINITION` | `telegramWebhook`                            |
+| `APPLICATION_RUNNER_ENABLED`       | `false`                                      |
+| `TELEGRAM_BOT_ID`                  | _(injected, same as ECS)_                    |
+| `TELEGRAM_CHAT_ID`                 | _(injected, same as ECS)_                    |
+
 ### History
 
 - **Apr 2023**: first ECS Fargate deployment with Docker images
 - **Feb 2024**: tried a Lambda approach (`nba-guesser` function, Java 17, `LambdaHandler`) — abandoned (likely cold start / timeout issues)
 - **Feb 2024**: returned to ECS Fargate with optimized images (~179 MB vs ~225 MB)
+- **Mar 2026**: Lambda webhook handler (container image, Java 25) + API Gateway HTTP API + Telegram webhook
 
 ### CLI access
 
