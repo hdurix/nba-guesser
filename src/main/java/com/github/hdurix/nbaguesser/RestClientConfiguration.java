@@ -15,8 +15,7 @@ class RestClientConfiguration {
     JacksonJsonHttpMessageConverter converter = new JacksonJsonHttpMessageConverter();
     converter.setSupportedMediaTypes(List.of(MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN));
 
-    return RestClient
-      .builder()
+    return RestClient.builder()
       .messageConverters(converters -> {
         converters.clear();
         converters.add(converter);

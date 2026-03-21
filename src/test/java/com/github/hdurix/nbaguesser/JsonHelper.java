@@ -12,8 +12,7 @@ public final class JsonHelper {
   private JsonHelper() {}
 
   public static ObjectMapper jsonMapper() {
-    return JsonMapper
-      .builder()
+    return JsonMapper.builder()
       .changeDefaultPropertyInclusion(v -> v.withValueInclusion(JsonInclude.Include.NON_NULL))
       .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
       .disable(DeserializationFeature.FAIL_ON_MISSING_EXTERNAL_TYPE_ID_PROPERTY)

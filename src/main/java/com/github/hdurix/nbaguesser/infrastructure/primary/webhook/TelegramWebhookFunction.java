@@ -61,8 +61,7 @@ class TelegramWebhookFunction implements Function<String, String> {
       return;
     }
 
-    QuizAnswer answer = QuizAnswer
-      .builder()
+    QuizAnswer answer = QuizAnswer.builder()
       .pollId(pollAnswer.poll_id())
       .userId(pollAnswer.user().id())
       .userName(pollAnswer.user().first_name())

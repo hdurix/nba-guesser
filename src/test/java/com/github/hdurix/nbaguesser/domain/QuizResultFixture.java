@@ -10,8 +10,7 @@ public class QuizResultFixture {
   public static QuizResult.QuizResultBuilder makeQuizResultBuilder() {
     List<String> options = makeSuggestedPlayers().stream().map(Player::fullName).toList();
 
-    return QuizResult
-      .builder()
+    return QuizResult.builder()
       .pollId("5678")
       .chatId("456")
       .date(LocalDate.of(2026, 3, 21))

@@ -5,8 +5,7 @@ import java.time.Instant;
 public class QuizAnswerFixture {
 
   public static QuizAnswer.QuizAnswerBuilder makeQuizAnswerBuilder() {
-    return QuizAnswer
-      .builder()
+    return QuizAnswer.builder()
       .pollId("5678")
       .userId(123456789L)
       .userName("John")

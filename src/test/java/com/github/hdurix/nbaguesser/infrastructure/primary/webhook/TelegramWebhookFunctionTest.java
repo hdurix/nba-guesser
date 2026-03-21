@@ -23,8 +23,7 @@ class TelegramWebhookFunctionTest {
   @Test
   void shouldSavePollAnswer() {
     TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswers);
-    String json =
-      """
+    String json = """
       {
         "update_id": 1,
         "poll_answer": {
@@ -51,8 +50,7 @@ class TelegramWebhookFunctionTest {
   @Test
   void shouldIgnoreRetractedPollAnswer() {
     TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswers);
-    String json =
-      """
+    String json = """
       {
         "update_id": 1,
         "poll_answer": {
@@ -72,8 +70,7 @@ class TelegramWebhookFunctionTest {
   @Test
   void shouldReturnOkForStatsCommand() {
     TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswers);
-    String json =
-      """
+    String json = """
       {
         "update_id": 2,
         "message": {
@@ -109,8 +106,7 @@ class TelegramWebhookFunctionTest {
   @Test
   void shouldIgnoreUnknownFields() {
     TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswers);
-    String json =
-      """
+    String json = """
       {
         "update_id": 4,
         "unknown_field": "value",

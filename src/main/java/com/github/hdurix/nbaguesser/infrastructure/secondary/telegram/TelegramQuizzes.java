@@ -61,8 +61,7 @@ class TelegramQuizzes implements Quizzes {
 
     Assert.notNull("sendPoll response", response);
 
-    return QuizResult
-      .builder()
+    return QuizResult.builder()
       .pollId(response.result().poll().id())
       .chatId(chatId)
       .date(LocalDate.now())
