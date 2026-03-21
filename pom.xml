@@ -30,6 +30,10 @@
     <spring-boot.version>3.0.2</spring-boot.version>
     <archunit-junit5.version>1.0.1</archunit-junit5.version>
     <reflections.version>0.10.2</reflections.version>
+
+    <!-- Telegram test defaults (overridden by settings.xml locally) -->
+    <nba-guesser-bot.telegram.bot-id>test-bot-id</nba-guesser-bot.telegram.bot-id>
+    <nba-guesser-test.telegram.chat-id>test-chat-id</nba-guesser-test.telegram.chat-id>
   </properties>
 
   <dependencyManagement>
