@@ -10,5 +10,4 @@ To mark a package you have to add a `package-info.java` file at the package root
 ```java
 @com.github.hdurix.nbaguesser.SharedKernel
 package com.github.hdurix.nbaguesser;
-
 ```
