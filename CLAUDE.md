@@ -113,3 +113,4 @@ All commands must use `--profile perso --region eu-west-3`.
 - **Full validation** (tests + coverage): `./mvnw clean verify`
 - **Format check**: `npx prettier --check .`
 - **Format fix**: `npx prettier --write .`
+- **Deploy** (manual): `gh workflow run deploy.yml --ref main` (builds Docker image and pushes to ECR)
