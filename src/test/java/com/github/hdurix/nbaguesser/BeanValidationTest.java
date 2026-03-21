@@ -36,8 +36,7 @@ class BeanValidationTest {
       .setUrls(ClasspathHelper.forPackage(ROOT_PACKAGE))
       .setScanners(Scanners.TypesAnnotated, Scanners.SubTypes)
       .filterInputsBy(new FilterBuilder().includePackage(ROOT_PACKAGE))
-  )
-    .getTypesAnnotatedWith(RestController.class);
+  ).getTypesAnnotatedWith(RestController.class);
 
   @Test
   void shouldHaveValidatedAnnotationForAllParameters() {
@@ -64,8 +63,7 @@ class BeanValidationTest {
 
   private Consumer<Method> checkValidatedAnnotation() {
     return method ->
-      Arrays
-        .stream(method.getParameters())
+      Arrays.stream(method.getParameters())
         .filter(checkedTypes())
         .forEach(parameter -> {
           assertThat(Arrays.stream(parameter.getAnnotations()))

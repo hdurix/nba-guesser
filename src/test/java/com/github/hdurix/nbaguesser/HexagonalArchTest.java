@@ -44,13 +44,15 @@ class HexagonalArchTest {
   );
 
   private static Collection<String> buildPackagesPatterns(Collection<String> packages) {
-    return packages.stream().map(path -> path + "..").toList();
+    return packages
+      .stream()
+      .map(path -> path + "..")
+      .toList();
   }
 
   private static Collection<String> packagesWithAnnotation(Class<? extends Annotation> annotationClass) throws AssertionError {
     try {
-      return Files
-        .walk(Paths.get("src", "main", "java", "com", "github", "hdurix", "nbaguesser"))
+      return Files.walk(Paths.get("src", "main", "java", "com", "github", "hdurix", "nbaguesser"))
         .filter(path -> path.toString().endsWith("package-info.java"))
         .map(toPackageName())
         .map(path -> path.replaceAll("[\\/]", "."))
@@ -87,48 +89,43 @@ class HexagonalArchTest {
 
     @Test
     void shouldNotDependOnOtherBoundedContextDomains() {
-      Stream
-        .concat(businessContexts.stream(), sharedKernels.stream())
-        .forEach(context -> {
-          noClasses()
-            .that()
-            .resideInAnyPackage(context + "..")
-            .should()
-            .dependOnClassesThat()
-            .resideInAnyPackage(otherBusinessContextsDomains(context))
-            .because("Contexts can only depend on classes in the same context or shared kernels")
-            .check(classes);
-        });
+      Stream.concat(businessContexts.stream(), sharedKernels.stream()).forEach(context -> {
+        noClasses()
+          .that()
+          .resideInAnyPackage(context + "..")
+          .should()
+          .dependOnClassesThat()
+          .resideInAnyPackage(otherBusinessContextsDomains(context))
+          .because("Contexts can only depend on classes in the same context or shared kernels")
+          .check(classes);
+      });
     }
 
     @Test
     void shouldBeAnHexagonalArchitecture() {
-      Stream
-        .concat(businessContexts.stream(), sharedKernels.stream())
-        .forEach(context ->
-          Architectures
-            .layeredArchitecture()
-            .consideringOnlyDependenciesInAnyPackage(context + "..")
-            .withOptionalLayers(true)
-            .layer("domain models")
-            .definedBy(context + ".domain..")
-            .layer("domain services")
-            .definedBy(context + ".domain..")
-            .layer("application services")
-            .definedBy(context + ".application..")
-            .layer("primary adapters")
-            .definedBy(context + ".infrastructure.primary..")
-            .layer("secondary adapters")
-            .definedBy(context + ".infrastructure.secondary..")
-            .whereLayer("application services")
-            .mayOnlyBeAccessedByLayers("primary adapters")
-            .whereLayer("primary adapters")
-            .mayNotBeAccessedByAnyLayer()
-            .whereLayer("secondary adapters")
-            .mayNotBeAccessedByAnyLayer()
-            .because("Each bounded context should implement an hexagonal architecture")
-            .check(classes)
-        );
+      Stream.concat(businessContexts.stream(), sharedKernels.stream()).forEach(context ->
+        Architectures.layeredArchitecture()
+          .consideringOnlyDependenciesInAnyPackage(context + "..")
+          .withOptionalLayers(true)
+          .layer("domain models")
+          .definedBy(context + ".domain..")
+          .layer("domain services")
+          .definedBy(context + ".domain..")
+          .layer("application services")
+          .definedBy(context + ".application..")
+          .layer("primary adapters")
+          .definedBy(context + ".infrastructure.primary..")
+          .layer("secondary adapters")
+          .definedBy(context + ".infrastructure.secondary..")
+          .whereLayer("application services")
+          .mayOnlyBeAccessedByLayers("primary adapters")
+          .whereLayer("primary adapters")
+          .mayNotBeAccessedByAnyLayer()
+          .whereLayer("secondary adapters")
+          .mayNotBeAccessedByAnyLayer()
+          .because("Each bounded context should implement an hexagonal architecture")
+          .check(classes)
+      );
     }
 
     @Test
@@ -150,7 +147,11 @@ class HexagonalArchTest {
     }
 
     private String[] otherBusinessContextsDomains(String context) {
-      return businessContexts.stream().filter(other -> !context.equals(other)).map(name -> name + ".domain..").toArray(String[]::new);
+      return businessContexts
+        .stream()
+        .filter(other -> !context.equals(other))
+        .map(name -> name + ".domain..")
+        .toArray(String[]::new);
     }
   }
 
@@ -170,8 +171,7 @@ class HexagonalArchTest {
     }
 
     private String[] authorizedDomainPackages() {
-      return Stream
-        .of(List.of(".domain.."), vanillaPackages, commonToolsAndUtilsPackages, sharedKernelsPackages)
+      return Stream.of(List.of(".domain.."), vanillaPackages, commonToolsAndUtilsPackages, sharedKernelsPackages)
         .flatMap(Collection::stream)
         .toArray(String[]::new);
     }
@@ -231,18 +231,16 @@ class HexagonalArchTest {
 
     @Test
     void shouldNotDependOnSameContextPrimary() {
-      Stream
-        .concat(businessContexts.stream(), sharedKernels.stream())
-        .forEach(context -> {
-          noClasses()
-            .that()
-            .resideInAPackage(context + ".infrastructure.secondary..")
-            .should()
-            .dependOnClassesThat()
-            .resideInAPackage(context + ".infrastructure.primary")
-            .because("Secondary should not loop to its own context's primary")
-            .check(classes);
-        });
+      Stream.concat(businessContexts.stream(), sharedKernels.stream()).forEach(context -> {
+        noClasses()
+          .that()
+          .resideInAPackage(context + ".infrastructure.secondary..")
+          .should()
+          .dependOnClassesThat()
+          .resideInAPackage(context + ".infrastructure.primary")
+          .because("Secondary should not loop to its own context's primary")
+          .check(classes);
+      });
     }
   }
 }

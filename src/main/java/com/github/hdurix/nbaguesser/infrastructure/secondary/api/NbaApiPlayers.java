@@ -4,21 +4,21 @@ import com.github.hdurix.nbaguesser.domain.Player;
 import com.github.hdurix.nbaguesser.domain.Players;
 import java.util.Collection;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 @Repository
 class NbaApiPlayers implements Players {
 
   public static final String PLAYERS_URL =
     "https://gist.githubusercontent.com/hdurix/c83df92b0385c7d3d4c033bfd34e4909/raw/nba-players.json";
-  private final RestTemplate restTemplate;
+  private final RestClient restClient;
 
-  public NbaApiPlayers(RestTemplate restTemplate) {
-    this.restTemplate = restTemplate;
+  public NbaApiPlayers(RestClient restClient) {
+    this.restClient = restClient;
   }
 
   @Override
   public Collection<Player> listAll() {
-    return restTemplate.getForObject(PLAYERS_URL, ApiPlayersWrapper.class).toPlayers();
+    return restClient.get().uri(PLAYERS_URL).retrieve().body(ApiPlayersWrapper.class).toPlayers();
   }
 }

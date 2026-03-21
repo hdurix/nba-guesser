@@ -4,7 +4,7 @@ CommandLineRunner (CLR) quiz game: fetches NBA players, generates a quiz, sends 
 
 ## Tech Stack
 
-- **Backend**: Spring Boot 3.0.2, Java 17, Maven
+- **Backend**: Spring Boot 4.0.4, Java 25, Maven
 - **Mode**: CommandLineRunner (no web server — `spring.main.web-application-type=NONE`)
 - **Architecture**: Hexagonal (ports & adapters), DDD
 

@@ -14,21 +14,18 @@
   <packaging>jar</packaging>
 
   <properties>
-    <java.version>17</java.version>
+    <java.version>25</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <maven.version>3.6.0</maven.version>
-    <junit-jupiter.version>5.9.2</junit-jupiter.version>
-    <assertj.version>3.24.2</assertj.version>
-    <mockito.version>5.0.0</mockito.version>
-    <jacoco.version>0.8.8</jacoco.version>
-    <maven-enforcer-plugin.version>3.1.0</maven-enforcer-plugin.version>
-    <compiler-plugin.version>3.10.1</compiler-plugin.version>
-    <surefire-plugin.version>3.0.0-M8</surefire-plugin.version>
-    <failsafe-plugin.version>3.0.0-M5</failsafe-plugin.version>
-    <spring-boot.version>3.0.2</spring-boot.version>
-    <archunit-junit5.version>1.0.1</archunit-junit5.version>
+    <jacoco.version>0.8.14</jacoco.version>
+    <maven-enforcer-plugin.version>3.6.2</maven-enforcer-plugin.version>
+    <compiler-plugin.version>3.15.0</compiler-plugin.version>
+    <surefire-plugin.version>3.5.5</surefire-plugin.version>
+    <failsafe-plugin.version>3.5.5</failsafe-plugin.version>
+    <spring-boot.version>4.0.4</spring-boot.version>
+    <archunit-junit5.version>1.4.1</archunit-junit5.version>
     <reflections.version>0.10.2</reflections.version>
 
     <!-- Telegram test defaults (overridden by settings.xml locally) -->
@@ -85,6 +82,12 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webmvc-test</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -242,8 +245,8 @@
                 <version>[${maven.version},)</version>
               </requireMavenVersion>
               <requireJavaVersion>
-                <message>You are running an incompatible version of Java. JHipster supports JDK 17.</message>
-                <version>[17,18)</version>
+                <message>You are running an incompatible version of Java. Requires JDK 25+.</message>
+                <version>[25,)</version>
               </requireJavaVersion>
             </rules>
           </configuration>

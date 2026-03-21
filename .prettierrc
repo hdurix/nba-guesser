@@ -6,6 +6,11 @@ tabWidth: 2
 useTabs: false
 endOfLine: 'lf'
 
+plugins:
+  - 'prettier-plugin-java'
+  - '@prettier/plugin-xml'
+  - 'prettier-plugin-packagejson'
+
 # js and ts rules:
 arrowParens: avoid
 
