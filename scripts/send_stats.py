@@ -52,20 +52,13 @@ def build_messages(data):
                 monthly[month][name]["correct"] += 1
 
     players = list(rankings.keys())
-    initials = [p[0] for p in players]
-    # Handle duplicate initials
-    seen = {}
-    for i, ini in enumerate(initials):
-        if ini in seen:
-            initials[seen[ini]] = players[seen[ini]].split()[0][:3]
-            initials[i] = players[i].split()[0][:3]
-        seen[ini] = i
+    short_names = [p.split()[0][:3] for p in players]
 
     lines2 = ["📈 **ÉVOLUTION MENSUELLE**", "", "```"]
-    header = "     " + " ".join(f"{n:>5}" for n in initials)
+    header = "     " + " ".join(f"{n:>5}" for n in short_names)
     lines2.append(header)
     for month in sorted(monthly.keys()):
-        m = month[2:4] + "/" + month[5:]
+        m = month[5:] + "/" + month[2:4]
         vals = []
         for p in players:
             s = monthly[month][p]
