@@ -1,9 +1,11 @@
 package com.github.hdurix.nbaguesser.application;
 
 import com.github.hdurix.nbaguesser.IntegrationTest;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@Disabled("Depends on NBA API which is deprecated")
 @IntegrationTest
 class PlayersApplicationServiceIntTest {
 
