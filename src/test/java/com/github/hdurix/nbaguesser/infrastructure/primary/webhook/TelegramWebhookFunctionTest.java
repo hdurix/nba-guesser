@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import com.github.hdurix.nbaguesser.UnitTest;
 import com.github.hdurix.nbaguesser.application.QuizAnswerApplicationService;
+import com.github.hdurix.nbaguesser.application.StatsApplicationService;
 import com.github.hdurix.nbaguesser.domain.QuizAnswer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,9 +21,15 @@ class TelegramWebhookFunctionTest {
   @Mock
   private QuizAnswerApplicationService quizAnswerApplicationService;
 
+  @Mock
+  private StatsApplicationService statsApplicationService;
+
+  private TelegramWebhookFunction function() {
+    return new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswerApplicationService, statsApplicationService);
+  }
+
   @Test
   void shouldSavePollAnswer() {
-    TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswerApplicationService);
     String json = """
       {
         "update_id": 1,
@@ -34,7 +41,7 @@ class TelegramWebhookFunctionTest {
       }
       """;
 
-    String result = function.apply(json);
+    String result = function().apply(json);
 
     assertThat(result).isEqualTo("OK");
     ArgumentCaptor<QuizAnswer> captor = ArgumentCaptor.forClass(QuizAnswer.class);
@@ -49,7 +56,6 @@ class TelegramWebhookFunctionTest {
 
   @Test
   void shouldIgnoreRetractedPollAnswer() {
-    TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswerApplicationService);
     String json = """
       {
         "update_id": 1,
@@ -61,15 +67,14 @@ class TelegramWebhookFunctionTest {
       }
       """;
 
-    String result = function.apply(json);
+    String result = function().apply(json);
 
     assertThat(result).isEqualTo("OK");
     verifyNoInteractions(quizAnswerApplicationService);
   }
 
   @Test
-  void shouldReturnOkForStatsCommand() {
-    TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswerApplicationService);
+  void shouldSendStatsForStatsCommand() {
     String json = """
       {
         "update_id": 2,
@@ -82,30 +87,30 @@ class TelegramWebhookFunctionTest {
       }
       """;
 
-    assertThat(function.apply(json)).isEqualTo("OK");
+    String result = function().apply(json);
+
+    assertThat(result).isEqualTo("OK");
+    verify(statsApplicationService).sendStats("100");
   }
 
   @Test
   void shouldReturnOkForUnhandledUpdateType() {
-    TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswerApplicationService);
     String json = """
       {
         "update_id": 3
       }
       """;
 
-    assertThat(function.apply(json)).isEqualTo("OK");
+    assertThat(function().apply(json)).isEqualTo("OK");
   }
 
   @Test
   void shouldReturnOkForInvalidJson() {
-    TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswerApplicationService);
-    assertThat(function.apply("not-json")).isEqualTo("OK");
+    assertThat(function().apply("not-json")).isEqualTo("OK");
   }
 
   @Test
   void shouldIgnoreUnknownFields() {
-    TelegramWebhookFunction function = new TelegramWebhookFunction(JsonMapper.builder().build(), quizAnswerApplicationService);
     String json = """
       {
         "update_id": 4,
@@ -118,6 +123,6 @@ class TelegramWebhookFunctionTest {
       }
       """;
 
-    assertThat(function.apply(json)).isEqualTo("OK");
+    assertThat(function().apply(json)).isEqualTo("OK");
   }
 }
