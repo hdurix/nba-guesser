@@ -87,14 +87,18 @@ The app runs on **AWS** (`eu-west-3` / Paris), account `301722318422`.
 
 | Service             | Resource                                              | Purpose                                       |
 | ------------------- | ----------------------------------------------------- | --------------------------------------------- |
-| **ECR**             | `nba-guesser-images`                                  | Docker image repository                       |
-| **ECS**             | Cluster `nba-guessers`, task def `nba-guesser:4`      | Runs the container on Fargate                 |
+| **ECR**             | `nba-guesser-images`                                  | Docker image repository (ECS)                 |
+| **ECR**             | `nba-guesser-webhook`                                 | Docker image repository (Lambda)              |
+| **ECS**             | Cluster `nba-guessers`, task def `nba-guesser:5`      | Runs the container on Fargate                 |
 | **EventBridge**     | Rule `nba-guesser` (`cron(30 6 * * ? *)`)             | Daily scheduling (only active rule)           |
 | **Lambda**          | `nba-guesser-webhook` (container image, 1024 MB, 60s) | Telegram webhook handler                      |
 | **API Gateway**     | HTTP API `nba-guesser-webhook` (ID: `2mamsx798j`)     | `POST /webhook` → Lambda                      |
 | **CloudWatch Logs** | `/ecs/nba-guessers`                                   | ECS container logs                            |
 | **CloudWatch Logs** | `/aws/lambda/nba-guesser-webhook`                     | Lambda function logs                          |
 | **IAM**             | `ecsTaskExecutionRole`, `ecsEventsRole`               | ECS task execution + EventBridge trigger      |
+| **IAM**             | `nba-guesser-ecs-task-role`                           | ECS task role (DynamoDB read/write)           |
+| **IAM**             | `nba-guesser-lambda-role`                             | Lambda execution role (DynamoDB read/write)   |
+| **IAM**             | `github-actions-nba-guesser-deploy`                   | GitHub Actions OIDC role (ECR push + Lambda)  |
 | **DynamoDB**        | `nba-guesser-quizzes` (PK: `poll_id`)                 | Quiz metadata (date, options, correct answer) |
 | **DynamoDB**        | `nba-guesser-answers` (PK: `poll_id`, SK: `user_id`)  | Player answers (user_name, option, timestamp) |
 
