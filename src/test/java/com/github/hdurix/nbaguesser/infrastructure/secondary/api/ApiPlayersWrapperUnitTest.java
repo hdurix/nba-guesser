@@ -41,13 +41,13 @@ class ApiPlayersWrapperUnitTest {
                 2019,
                 2,
                 31,
-                1.0,
-                "2019",
-                "2023",
+                1,
                 12.200,
                 10.200,
                 1.900,
-                "Season"
+                "Season",
+                2019,
+                2023
               ],
               [
                 1629623,
@@ -70,12 +70,40 @@ class ApiPlayersWrapperUnitTest {
                 null,
                 null,
                 null,
-                "2021",
-                "2023",
                 2.000,
                 0.000,
                 0.000,
-                "Season"
+                "Season",
+                2021,
+                2023
+              ],
+              [
+                9999,
+                "Retired",
+                "Player",
+                "player-retired",
+                0,
+                null,
+                0,
+                null,
+                null,
+                null,
+                null,
+                "G",
+                "6-0",
+                "180",
+                null,
+                "USA",
+                2010,
+                null,
+                null,
+                0,
+                0.000,
+                0.000,
+                0.000,
+                "Season",
+                2010,
+                2020
               ]
             ]
           }
