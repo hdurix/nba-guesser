@@ -36,15 +36,13 @@ class DynamoDbQuizAnswers implements QuizAnswers {
     return response
       .items()
       .stream()
-      .filter(item -> item.containsKey("timestamp"))
       .map(DynamoDbQuizAnswers::fromItem)
       .filter(answer -> pollIds.contains(answer.pollId()))
       .toList();
   }
 
   private static QuizAnswer fromItem(Map<String, AttributeValue> item) {
-    return QuizAnswer
-      .builder()
+    return QuizAnswer.builder()
       .pollId(item.get("poll_id").s())
       .userId(Long.parseLong(item.get("user_id").n()))
       .userName(item.get("user_name").s())
