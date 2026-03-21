@@ -1,0 +1,59 @@
+name: Deploy Webhook
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: deploy webhook
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      AWS_REGION: eu-west-3
+      ECR_REPOSITORY: nba-guesser-webhook
+      LAMBDA_FUNCTION: nba-guesser-webhook
+    steps:
+      - name: 'Setup: checkout project'
+        uses: actions/checkout@v4
+      - name: 'Setup: environment'
+        id: setup
+        uses: ./.github/actions/setup
+      - name: 'Init: cache local Maven repository'
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: 'Build: Maven package (Lambda profile)'
+        run: |
+          chmod +x mvnw
+          ./mvnw package -Plambda -DskipTests
+      - name: 'Auth: AWS credentials'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: 'Auth: ECR login'
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: 'Deploy: build and push image'
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: sha-${{ github.sha }}
+        run: |
+          docker build -f Dockerfile.lambda -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+      - name: 'Deploy: update Lambda function'
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          aws lambda update-function-code \
+            --function-name $LAMBDA_FUNCTION \
+            --image-uri $ECR_REGISTRY/$ECR_REPOSITORY:latest \
+            --region $AWS_REGION
