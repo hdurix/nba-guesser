@@ -22,9 +22,8 @@ class QuizResultUnitTest {
 
   @Test
   void shouldNotBuildWithEmptyOptions() {
-    assertThatThrownBy(() -> makeQuizResultBuilder().options(java.util.List.of()).build()).isExactlyInstanceOf(
-      MissingMandatoryValueException.class
-    );
+    assertThatThrownBy(() -> makeQuizResultBuilder().options(java.util.List.of()).build())
+      .isExactlyInstanceOf(MissingMandatoryValueException.class);
   }
 
   @Test
