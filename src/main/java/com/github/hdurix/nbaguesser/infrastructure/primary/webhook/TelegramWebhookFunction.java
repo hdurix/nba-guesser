@@ -59,12 +59,7 @@ class TelegramWebhookFunction implements Function<String, String> {
       return;
     }
 
-    quizAnswerApplicationService.save(
-      pollAnswer.poll_id(),
-      pollAnswer.user().id(),
-      pollAnswer.user().first_name(),
-      pollAnswer.option_ids().getFirst()
-    );
+    quizAnswerApplicationService.save(pollAnswer.toQuizAnswer());
   }
 
   private void handleStatsCommand(TelegramUpdate update) {

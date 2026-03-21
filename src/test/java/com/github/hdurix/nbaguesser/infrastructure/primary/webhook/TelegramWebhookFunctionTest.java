@@ -5,8 +5,10 @@ import static org.mockito.Mockito.*;
 
 import com.github.hdurix.nbaguesser.UnitTest;
 import com.github.hdurix.nbaguesser.application.QuizAnswerApplicationService;
+import com.github.hdurix.nbaguesser.domain.QuizAnswer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tools.jackson.databind.json.JsonMapper;
@@ -35,7 +37,14 @@ class TelegramWebhookFunctionTest {
     String result = function.apply(json);
 
     assertThat(result).isEqualTo("OK");
-    verify(quizAnswerApplicationService).save("abc123", 42L, "John", 2);
+    ArgumentCaptor<QuizAnswer> captor = ArgumentCaptor.forClass(QuizAnswer.class);
+    verify(quizAnswerApplicationService).save(captor.capture());
+    QuizAnswer saved = captor.getValue();
+    assertThat(saved.pollId()).isEqualTo("abc123");
+    assertThat(saved.userId()).isEqualTo(42L);
+    assertThat(saved.userName()).isEqualTo("John");
+    assertThat(saved.optionIndex()).isEqualTo(2);
+    assertThat(saved.timestamp()).isNotNull();
   }
 
   @Test
