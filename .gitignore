@@ -3,6 +3,8 @@
 ######################
 /src/main/webapp/content/css/main.css
 /target/classes/static/**
+scripts/*.session
+results.json
 /src/test/javascript/coverage/
 nba-players.json
 
