@@ -308,6 +308,10 @@
             <include>**/*IntTest*</include>
             <include>**/*CucumberTest*</include>
           </includes>
+          <systemPropertyVariables>
+            <telegram.bot_id>${nba-guesser-bot.telegram.bot-id}</telegram.bot_id>
+            <telegram.chat_id>${nba-guesser-test.telegram.chat-id}</telegram.chat_id>
+          </systemPropertyVariables>
         </configuration>
         <executions>
           <execution>
