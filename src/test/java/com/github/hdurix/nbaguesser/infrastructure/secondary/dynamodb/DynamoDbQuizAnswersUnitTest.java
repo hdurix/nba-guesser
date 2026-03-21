@@ -87,4 +87,40 @@ class DynamoDbQuizAnswersUnitTest {
     assertThat(answer.userName()).isEqualTo("Alice");
     assertThat(answer.optionIndex()).isEqualTo(2);
   }
+
+  @Test
+  void shouldSkipLegacyItemsWithoutTimestamp() {
+    Map<String, AttributeValue> legacyItem = Map.of(
+      "poll_id",
+      AttributeValue.builder().s("poll1").build(),
+      "user_id",
+      AttributeValue.builder().n("42").build(),
+      "user_name",
+      AttributeValue.builder().s("Alice").build(),
+      "option_index",
+      AttributeValue.builder().n("2").build(),
+      "date",
+      AttributeValue.builder().s("2024-12-10T06:31:01+00:00").build(),
+      "correct",
+      AttributeValue.builder().bool(true).build()
+    );
+    Map<String, AttributeValue> newItem = Map.of(
+      "poll_id",
+      AttributeValue.builder().s("poll1").build(),
+      "user_id",
+      AttributeValue.builder().n("43").build(),
+      "user_name",
+      AttributeValue.builder().s("Bob").build(),
+      "option_index",
+      AttributeValue.builder().n("1").build(),
+      "timestamp",
+      AttributeValue.builder().s("2026-03-21T08:30:00Z").build()
+    );
+    when(dynamoDbClient.scan(any(ScanRequest.class))).thenReturn(ScanResponse.builder().items(List.of(legacyItem, newItem)).build());
+
+    List<QuizAnswer> answers = dynamoDbQuizAnswers.findByPollIds(Set.of("poll1"));
+
+    assertThat(answers).hasSize(1);
+    assertThat(answers.getFirst().userName()).isEqualTo("Bob");
+  }
 }
