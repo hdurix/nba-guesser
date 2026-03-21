@@ -28,6 +28,11 @@ class QuizResultUnitTest {
   }
 
   @Test
+  void shouldNotBuildWithBlankChatId() {
+    assertThatThrownBy(() -> makeQuizResultBuilder().chatId(" ").build()).isExactlyInstanceOf(MissingMandatoryValueException.class);
+  }
+
+  @Test
   void shouldNotBuildWithBlankCorrectAnswer() {
     assertThatThrownBy(() -> makeQuizResultBuilder().correctAnswer(" ").build()).isExactlyInstanceOf(MissingMandatoryValueException.class);
   }

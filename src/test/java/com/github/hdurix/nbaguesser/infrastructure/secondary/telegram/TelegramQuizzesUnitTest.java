@@ -44,6 +44,7 @@ class TelegramQuizzesUnitTest {
 
     server.verify();
     assertThat(result.pollId()).isEqualTo("5678");
+    assertThat(result.chatId()).isEqualTo("456");
     assertThat(result.messageId()).isEqualTo(123L);
     assertThat(result.options()).hasSize(10);
     assertThat(result.correctOptionIndex()).isEqualTo(2);

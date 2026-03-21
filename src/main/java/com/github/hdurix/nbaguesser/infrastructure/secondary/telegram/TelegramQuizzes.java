@@ -63,6 +63,7 @@ class TelegramQuizzes implements Quizzes {
 
     return QuizResult.builder()
       .pollId(response.result().poll().id())
+      .chatId(chatId)
       .date(LocalDate.now())
       .options(options)
       .correctOptionIndex(correctOptionId)

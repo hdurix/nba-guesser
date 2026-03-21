@@ -12,6 +12,7 @@ public class QuizResultFixture {
 
     return QuizResult.builder()
       .pollId("5678")
+      .chatId("456")
       .date(LocalDate.of(2026, 3, 21))
       .options(options)
       .correctOptionIndex(2)

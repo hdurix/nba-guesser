@@ -29,6 +29,8 @@ class DynamoDbQuizResults implements QuizResults {
     return Map.of(
       "poll_id",
       stringAttr(result.pollId()),
+      "chat_id",
+      stringAttr(result.chatId()),
       "date",
       stringAttr(result.date().toString()),
       "options",

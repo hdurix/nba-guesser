@@ -37,6 +37,7 @@ class DynamoDbQuizResultsUnitTest {
     PutItemRequest request = captor.getValue();
     assertThat(request.tableName()).isEqualTo("nba-guesser-quizzes");
     assertThat(request.item().get("poll_id").s()).isEqualTo("5678");
+    assertThat(request.item().get("chat_id").s()).isEqualTo("456");
     assertThat(request.item().get("date").s()).isEqualTo("2026-03-21");
     assertThat(request.item().get("correct_answer").s()).isEqualTo("Nic Claxton");
     assertThat(request.item().get("message_id").n()).isEqualTo("123");
