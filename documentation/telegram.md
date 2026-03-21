@@ -4,12 +4,47 @@ The `TelegramQuizzes` adapter sends quiz questions to a Telegram channel using t
 
 ## Configuration
 
-Two properties are required, configured via Maven `settings.xml`:
+Two Spring properties are required at runtime:
 
-| Property           | Description            | Example          |
-| ------------------ | ---------------------- | ---------------- |
-| `telegram.bot_id`  | Telegram bot token     | `123456:ABC-...` |
-| `telegram.chat_id` | Target chat/channel ID | `-100123456789`  |
+| Spring property    | Description            |
+| ------------------ | ---------------------- |
+| `telegram.bot_id`  | Telegram bot token     |
+| `telegram.chat_id` | Target chat/channel ID |
+
+### Credentials via Maven `settings.xml`
+
+Credentials are kept out of the repository by defining them in `~/.m2/settings.xml`:
+
+```xml
+<profiles>
+  <profile>
+    <id>nba-guesser</id>
+    <properties>
+      <nba-guesser-bot.telegram.bot-id>YOUR_BOT_TOKEN</nba-guesser-bot.telegram.bot-id>
+      <nba-guesser-test.telegram.chat-id>YOUR_CHAT_ID</nba-guesser-test.telegram.chat-id>
+    </properties>
+  </profile>
+</profiles>
+<activeProfiles>
+  <activeProfile>nba-guesser</activeProfile>
+</activeProfiles>
+```
+
+The failsafe plugin maps these Maven properties to Spring system properties for integration tests:
+
+```xml
+<!-- pom.xml — maven-failsafe-plugin -->
+<systemPropertyVariables>
+  <telegram.bot_id>${nba-guesser-bot.telegram.bot-id}</telegram.bot_id>
+  <telegram.chat_id>${nba-guesser-test.telegram.chat-id}</telegram.chat_id>
+</systemPropertyVariables>
+```
+
+For running the app directly, pass them as system properties:
+
+```bash
+./mvnw -Dtelegram.bot_id=YOUR_BOT_TOKEN -Dtelegram.chat_id=YOUR_CHAT_ID
+```
 
 ## Quiz flow
 

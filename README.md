@@ -27,22 +27,24 @@ Install Node.js dependencies (for formatting only):
 npm install
 ```
 
-Configure Telegram credentials in your Maven `settings.xml`:
+Configure Telegram credentials in your Maven `~/.m2/settings.xml` (never committed):
 
 ```xml
 <profiles>
   <profile>
-    <id>telegram</id>
+    <id>nba-guesser</id>
     <properties>
-      <telegram.bot_id>YOUR_BOT_ID</telegram.bot_id>
-      <telegram.chat_id>YOUR_CHAT_ID</telegram.chat_id>
+      <nba-guesser-bot.telegram.bot-id>YOUR_BOT_TOKEN</nba-guesser-bot.telegram.bot-id>
+      <nba-guesser-test.telegram.chat-id>YOUR_CHAT_ID</nba-guesser-test.telegram.chat-id>
     </properties>
   </profile>
 </profiles>
 <activeProfiles>
-  <activeProfile>telegram</activeProfile>
+  <activeProfile>nba-guesser</activeProfile>
 </activeProfiles>
 ```
+
+These Maven properties are mapped to Spring's `telegram.bot_id` / `telegram.chat_id` via the failsafe plugin (see [Telegram integration](documentation/telegram.md)).
 
 ## Commands
 
