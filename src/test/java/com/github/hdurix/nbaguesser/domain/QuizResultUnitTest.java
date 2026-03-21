@@ -5,43 +5,35 @@ import static org.assertj.core.api.Assertions.*;
 
 import com.github.hdurix.nbaguesser.UnitTest;
 import com.github.hdurix.nbaguesser.error.domain.MissingMandatoryValueException;
-import java.time.LocalDate;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 @UnitTest
 class QuizResultUnitTest {
 
   @Test
-  void shouldNotCreateWithBlankPollId() {
-    assertThatThrownBy(() -> new QuizResult(" ", LocalDate.now(), List.of("A"), 0, "A", 1L)).isExactlyInstanceOf(
+  void shouldNotBuildWithBlankPollId() {
+    assertThatThrownBy(() -> makeQuizResultBuilder().pollId(" ").build()).isExactlyInstanceOf(MissingMandatoryValueException.class);
+  }
+
+  @Test
+  void shouldNotBuildWithNullDate() {
+    assertThatThrownBy(() -> makeQuizResultBuilder().date(null).build()).isExactlyInstanceOf(MissingMandatoryValueException.class);
+  }
+
+  @Test
+  void shouldNotBuildWithEmptyOptions() {
+    assertThatThrownBy(() -> makeQuizResultBuilder().options(java.util.List.of()).build()).isExactlyInstanceOf(
       MissingMandatoryValueException.class
     );
   }
 
   @Test
-  void shouldNotCreateWithNullDate() {
-    assertThatThrownBy(() -> new QuizResult("id", null, List.of("A"), 0, "A", 1L)).isExactlyInstanceOf(
-      MissingMandatoryValueException.class
-    );
+  void shouldNotBuildWithBlankCorrectAnswer() {
+    assertThatThrownBy(() -> makeQuizResultBuilder().correctAnswer(" ").build()).isExactlyInstanceOf(MissingMandatoryValueException.class);
   }
 
   @Test
-  void shouldNotCreateWithEmptyOptions() {
-    assertThatThrownBy(() -> new QuizResult("id", LocalDate.now(), List.of(), 0, "A", 1L)).isExactlyInstanceOf(
-      MissingMandatoryValueException.class
-    );
-  }
-
-  @Test
-  void shouldNotCreateWithBlankCorrectAnswer() {
-    assertThatThrownBy(() -> new QuizResult("id", LocalDate.now(), List.of("A"), 0, " ", 1L)).isExactlyInstanceOf(
-      MissingMandatoryValueException.class
-    );
-  }
-
-  @Test
-  void shouldCreateValidQuizResult() {
+  void shouldBuild() {
     QuizResult result = makeQuizResult();
 
     assertThat(result.pollId()).isEqualTo("5678");

@@ -61,14 +61,14 @@ class TelegramQuizzes implements Quizzes {
 
     Assert.notNull("sendPoll response", response);
 
-    return new QuizResult(
-      response.result().poll().id(),
-      LocalDate.now(),
-      options,
-      correctOptionId,
-      correctPlayer.fullName(),
-      response.result().messageId()
-    );
+    return QuizResult.builder()
+      .pollId(response.result().poll().id())
+      .date(LocalDate.now())
+      .options(options)
+      .correctOptionIndex(correctOptionId)
+      .correctAnswer(correctPlayer.fullName())
+      .messageId(response.result().messageId())
+      .build();
   }
 
   private URI telegramUri(String method) {

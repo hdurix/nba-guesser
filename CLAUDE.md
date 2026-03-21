@@ -12,11 +12,12 @@ CommandLineRunner (CLR) quiz game: fetches NBA players, generates a quiz, sends 
 
 ```
 com.github.hdurix.nbaguesser/
-├── domain/           — Pure business logic (Player, Players, Quizzes, QuizzGenerator, Randomizer)
+├── domain/           — Pure business logic (Player, Players, Quizzes, QuizResult, QuizResults, QuizGenerator, Randomizer)
 ├── application/      — Use case orchestration (PlayersApplicationService)
 ├── infrastructure/
 │   └── secondary/
 │       ├── api/      — NBA player data adapter (NbaApiPlayers, ApiPlayersWrapper, ApiResultSet)
+│       ├── dynamodb/ — Quiz results adapter (DynamoDbQuizResults)
 │       └── telegram/ — Telegram quiz adapter (TelegramQuizzes)
 ├── error/            — Domain exceptions + REST error handlers
 └── common/           — Shared utilities (Assert, Generated, etc.)
@@ -26,7 +27,8 @@ Bounded context markers: `@BusinessContext` / `@SharedKernel` annotations on `pa
 
 ## Backend Conventions
 
-- Value objects: Java records with `Assert` validation in compact constructor
+- Value objects (≤3 fields): Java records with `Assert` validation in compact constructor
+- Value objects (>3 fields or 2+ fields of same type): `final class` with private constructor + builder pattern (record-style accessors, no `get` prefix)
 - Domain interfaces: simple names (`Players`, `Quizzes`) — no suffix
 - Application services: `@Service`, constructor-based DI
 - External API DTOs: prefixed with `Api` (`ApiPlayer`, `ApiResultSet`), mapped to domain objects
