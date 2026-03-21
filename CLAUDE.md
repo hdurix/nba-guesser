@@ -46,6 +46,18 @@ Bounded context markers: `@BusinessContext` / `@SharedKernel` annotations on `pa
 - Husky + lint-staged: pre-commit hook runs Prettier on staged files
 - **Always run Prettier before committing**
 
+## Secrets & Leak Prevention
+
+- **Sensitive config** (`telegram.bot_id`, `telegram.chat_id`, API keys) is injected via environment variables — **never** hardcode secrets in source or properties files
+- Before any commit/push, verify no token, key, or credential has been introduced in the diff
+- `.env` files, if used locally, must **not** be committed (add to `.gitignore`)
+
+## Workflow
+
+- **VCS**: GitHub (`git@github.com:hdurix/nba-guesser.git`), PRs to `main`
+- **CI**: runs on GitHub Actions
+- **Worktree setup**: after creating a new worktree, run `npm install` to get Prettier, Husky, and lint-staged working
+
 ## Commands
 
 - **Run app**: `./mvnw` (default goal is `spring-boot:run`)
