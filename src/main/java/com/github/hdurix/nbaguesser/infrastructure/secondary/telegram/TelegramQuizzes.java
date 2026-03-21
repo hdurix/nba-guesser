@@ -5,7 +5,6 @@ import com.github.hdurix.nbaguesser.domain.Quizzes;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -67,9 +66,5 @@ class TelegramQuizzes implements Quizzes {
       .toUri();
 
     restTemplate.getForEntity(uri, Object.class);
-  }
-
-  private static Function<Player, String> toPlayerOption() {
-    return player -> "\"" + player.fullName() + "\"";
   }
 }
