@@ -8,16 +8,16 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(name = "application.runner.enabled", havingValue = "true", matchIfMissing = true)
 @Generated(reason = "Not testing wiring")
-class QuizzRunner implements CommandLineRunner {
+class QuizRunner implements CommandLineRunner {
 
   private final PlayersApplicationService players;
 
-  QuizzRunner(PlayersApplicationService players) {
+  QuizRunner(PlayersApplicationService players) {
     this.players = players;
   }
 
   @Override
   public void run(String... args) {
-    players.generateQuizz();
+    players.generateQuiz();
   }
 }

@@ -1,8 +1,12 @@
 package com.github.hdurix.nbaguesser.infrastructure.secondary.telegram;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.hdurix.nbaguesser.domain.Player;
+import com.github.hdurix.nbaguesser.domain.QuizResult;
 import com.github.hdurix.nbaguesser.domain.Quizzes;
+import com.github.hdurix.nbaguesser.error.domain.Assert;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,9 +30,9 @@ class TelegramQuizzes implements Quizzes {
   }
 
   @Override
-  public void send(Collection<Player> suggestedPlayers, Player correctPlayer) {
+  public QuizResult send(Collection<Player> suggestedPlayers, Player correctPlayer) {
     sendPhoto(correctPlayer);
-    sendPoll(suggestedPlayers, correctPlayer);
+    return sendPoll(suggestedPlayers, correctPlayer);
   }
 
   private void sendPhoto(Player correctPlayer) {
@@ -41,13 +45,31 @@ class TelegramQuizzes implements Quizzes {
     restClient.post().uri(telegramUri("sendPhoto")).contentType(MediaType.APPLICATION_JSON).body(request).retrieve().toBodilessEntity();
   }
 
-  private void sendPoll(Collection<Player> suggestedPlayers, Player correctPlayer) {
+  private QuizResult sendPoll(Collection<Player> suggestedPlayers, Player correctPlayer) {
     List<String> options = suggestedPlayers.stream().map(Player::fullName).toList();
     int correctOptionId = new ArrayList<>(suggestedPlayers).indexOf(correctPlayer);
 
     SendPollRequest request = new SendPollRequest(chatId, "Who is this player?", options, correctOptionId, false, "quiz");
 
-    restClient.post().uri(telegramUri("sendPoll")).contentType(MediaType.APPLICATION_JSON).body(request).retrieve().toBodilessEntity();
+    SendPollResponse response = restClient
+      .post()
+      .uri(telegramUri("sendPoll"))
+      .contentType(MediaType.APPLICATION_JSON)
+      .body(request)
+      .retrieve()
+      .body(SendPollResponse.class);
+
+    Assert.notNull("sendPoll response", response);
+
+    return QuizResult.builder()
+      .pollId(response.result().poll().id())
+      .chatId(chatId)
+      .date(LocalDate.now())
+      .options(options)
+      .correctOptionIndex(correctOptionId)
+      .correctAnswer(correctPlayer.fullName())
+      .messageId(response.result().messageId())
+      .build();
   }
 
   private URI telegramUri(String method) {
@@ -64,4 +86,10 @@ class TelegramQuizzes implements Quizzes {
     boolean is_anonymous,
     String type
   ) {}
+
+  private record SendPollResponse(SendPollResult result) {}
+
+  private record SendPollResult(@JsonProperty("message_id") long messageId, SendPollPoll poll) {}
+
+  private record SendPollPoll(String id) {}
 }

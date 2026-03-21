@@ -11,7 +11,7 @@ class PlayersApplicationServiceIntTest {
   private PlayersApplicationService service;
 
   @Test
-  void shouldGenerateQuizz() {
-    service.generateQuizz();
+  void shouldGenerateQuiz() {
+    service.generateQuiz();
   }
 }
