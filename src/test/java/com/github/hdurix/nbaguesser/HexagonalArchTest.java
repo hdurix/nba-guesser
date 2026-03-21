@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Component;
@@ -23,7 +22,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 @UnitTest
-@Disabled
 class HexagonalArchTest {
 
   private static final String ROOT_PACKAGE = "com.github.hdurix.nbaguesser";
