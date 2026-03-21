@@ -60,6 +60,7 @@ Bounded context markers: `@BusinessContext` / `@SharedKernel` annotations on `pa
 - **CI**: runs on GitHub Actions
 - **Worktree setup**: after creating a new worktree, run `npm install` to get Prettier, Husky, and lint-staged working
 - **Rebase on main**: always `git fetch origin main && git rebase origin/main` before starting work — many PRs run in parallel so staying up-to-date avoids conflicts
+- **Always create a PR**: after committing, push the branch and create a PR to `main` — don't wait to be asked
 
 ## AWS Deployment
 
