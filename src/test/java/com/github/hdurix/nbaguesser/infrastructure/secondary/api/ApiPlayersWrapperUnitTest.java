@@ -18,24 +18,68 @@ class ApiPlayersWrapperUnitTest {
   static String json() {
     return """
       {
-        "league": {
-          "standard": [
-            {
-              "firstName": "Nic",
-              "lastName": "Claxton",
-              "personId": "2",
-              "teamId": "1610612751",
-              "isActive": true
-            },
-            {
-              "firstName": "Briante",
-              "lastName": "Weber",
-              "personId": "1",
-              "teamId": "1610612751",
-              "isActive": false
-            }
-          ]
-        }
+        "resultSets": [
+          {
+            "rowSet": [
+              [
+                2,
+                "Claxton",
+                "Nic",
+                "nic-claxton",
+                1610612751,
+                "nets",
+                0,
+                "Brooklyn",
+                "Nets",
+                "BKN",
+                "33",
+                "C",
+                "6-11",
+                "215",
+                "Georgia",
+                "USA",
+                2019,
+                2,
+                31,
+                1.0,
+                "2019",
+                "2023",
+                12.200,
+                10.200,
+                1.900,
+                "Season"
+              ],
+              [
+                1629623,
+                "Wigginton",
+                "Lindell",
+                "lindell-wigginton",
+                0,
+                null,
+                0,
+                null,
+                null,
+                null,
+                null,
+                "G",
+                "6-1",
+                "189",
+                "Iowa State",
+                "Canada",
+                2019,
+                null,
+                null,
+                null,
+                "2021",
+                "2023",
+                2.000,
+                0.000,
+                0.000,
+                "Season"
+              ]
+            ]
+          }
+        ]
       }
       """;
   }
