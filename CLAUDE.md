@@ -61,6 +61,51 @@ Bounded context markers: `@BusinessContext` / `@SharedKernel` annotations on `pa
 - **Worktree setup**: after creating a new worktree, run `npm install` to get Prettier, Husky, and lint-staged working
 - **Rebase on main**: always `git fetch origin main && git rebase origin/main` before starting work — many PRs run in parallel so staying up-to-date avoids conflicts
 
+## AWS Deployment
+
+The app runs on **AWS** (`eu-west-3` / Paris), account `301722318422`.
+
+### How it works
+
+Every day at **06:30 UTC** (08:30 Paris), an **EventBridge** cron rule triggers an **ECS Fargate** task:
+
+1. EventBridge rule `nba-guesser` fires
+2. ECS cluster `nba-guessers` starts a Fargate task (0.5 vCPU, 1 GB RAM)
+3. The container (from ECR `nba-guesser-images:latest`) boots Spring Boot, fetches NBA players, sends a Telegram quiz, then exits
+
+### AWS Resources
+
+| Service             | Resource                                         | Purpose                                  |
+| ------------------- | ------------------------------------------------ | ---------------------------------------- |
+| **ECR**             | `nba-guesser-images`                             | Docker image repository                  |
+| **ECS**             | Cluster `nba-guessers`, task def `nba-guesser:4` | Runs the container on Fargate            |
+| **EventBridge**     | Rule `nba-guesser` (`cron(30 6 * * ? *)`)        | Daily scheduling (only active rule)      |
+| **CloudWatch Logs** | `/ecs/nba-guessers`                              | Container logs                           |
+| **IAM**             | `ecsTaskExecutionRole`, `ecsEventsRole`          | ECS task execution + EventBridge trigger |
+
+### Other EventBridge rules (all DISABLED)
+
+- `nba-guesser-ippon` — `cron(0 7 * * ? *)` — targeted a different Telegram group
+- `nba-guesser-safe` — `cron(45 5 * * ? *)` — targeted a different Telegram group
+- `guesser-test` / `test` — test rules
+
+### History
+
+- **Apr 2023**: first ECS Fargate deployment with Docker images
+- **Feb 2024**: tried a Lambda approach (`nba-guesser` function, Java 17, `LambdaHandler`) — abandoned (likely cold start / timeout issues)
+- **Feb 2024**: returned to ECS Fargate with optimized images (~179 MB vs ~225 MB)
+
+### CLI access
+
+AWS CLI is configured with a named profile:
+
+```bash
+aws configure --profile perso   # region: eu-west-3
+aws sts get-caller-identity --profile perso  # verify account
+```
+
+All commands must use `--profile perso --region eu-west-3`.
+
 ## Commands
 
 - **Run app**: `./mvnw` (default goal is `spring-boot:run`)
