@@ -126,10 +126,13 @@ async def main():
         options = [extract_text(a.text) for a in poll.answers]
 
         correct_idx = None
-        if poll.correct_answers:
-            for i, a in enumerate(poll.answers):
-                if a.option in poll.correct_answers:
-                    correct_idx = i
+        if poll_media.results and poll_media.results.results:
+            for r in poll_media.results.results:
+                if r.correct:
+                    for i, a in enumerate(poll.answers):
+                        if a.option == r.option:
+                            correct_idx = i
+                            break
                     break
 
         correct_name = options[correct_idx] if correct_idx is not None else "?"
