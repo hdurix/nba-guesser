@@ -60,6 +60,7 @@ Bounded context markers: `@BusinessContext` / `@SharedKernel` annotations on `pa
 - **CI**: runs on GitHub Actions
 - **Worktree setup**: after creating a new worktree, run `npm install` to get Prettier, Husky, and lint-staged working
 - **Rebase on main**: always `git fetch origin main && git rebase origin/main` before starting work — many PRs run in parallel so staying up-to-date avoids conflicts
+- **Always create a PR**: after committing, push the branch and create a PR to `main` — don't wait to be asked
 
 ## AWS Deployment
 
@@ -75,13 +76,15 @@ Every day at **06:30 UTC** (08:30 Paris), an **EventBridge** cron rule triggers 
 
 ### AWS Resources
 
-| Service             | Resource                                         | Purpose                                  |
-| ------------------- | ------------------------------------------------ | ---------------------------------------- |
-| **ECR**             | `nba-guesser-images`                             | Docker image repository                  |
-| **ECS**             | Cluster `nba-guessers`, task def `nba-guesser:4` | Runs the container on Fargate            |
-| **EventBridge**     | Rule `nba-guesser` (`cron(30 6 * * ? *)`)        | Daily scheduling (only active rule)      |
-| **CloudWatch Logs** | `/ecs/nba-guessers`                              | Container logs                           |
-| **IAM**             | `ecsTaskExecutionRole`, `ecsEventsRole`          | ECS task execution + EventBridge trigger |
+| Service             | Resource                                             | Purpose                                       |
+| ------------------- | ---------------------------------------------------- | --------------------------------------------- |
+| **ECR**             | `nba-guesser-images`                                 | Docker image repository                       |
+| **ECS**             | Cluster `nba-guessers`, task def `nba-guesser:4`     | Runs the container on Fargate                 |
+| **EventBridge**     | Rule `nba-guesser` (`cron(30 6 * * ? *)`)            | Daily scheduling (only active rule)           |
+| **CloudWatch Logs** | `/ecs/nba-guessers`                                  | Container logs                                |
+| **IAM**             | `ecsTaskExecutionRole`, `ecsEventsRole`              | ECS task execution + EventBridge trigger      |
+| **DynamoDB**        | `nba-guesser-quizzes` (PK: `poll_id`)                | Quiz metadata (date, options, correct answer) |
+| **DynamoDB**        | `nba-guesser-answers` (PK: `poll_id`, SK: `user_id`) | Player answers (user_name, option, timestamp) |
 
 ### Other EventBridge rules (all DISABLED)
 
