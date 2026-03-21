@@ -5,11 +5,9 @@ import static org.assertj.core.api.Assertions.*;
 import com.github.hdurix.nbaguesser.IntegrationTest;
 import com.github.hdurix.nbaguesser.domain.Player;
 import java.util.Collection;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Disabled("NBA data.nba.net API is deprecated and returns 400")
 @IntegrationTest
 class NbaApiPlayersIntTest {
 
