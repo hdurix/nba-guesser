@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 class NbaApiPlayers implements Players {
 
   public static final String PLAYERS_URL =
-    "https://gist.githubusercontent.com/hdurix/c83df92b0385c7d3d4c033bfd34e4909/raw/5788406b2ea5365eb6b7731c9cbc36d3db84d94f/nba-players.json";
+    "https://gist.githubusercontent.com/hdurix/c83df92b0385c7d3d4c033bfd34e4909/raw/nba-players.json";
   private final RestTemplate restTemplate;
 
   public NbaApiPlayers(RestTemplate restTemplate) {

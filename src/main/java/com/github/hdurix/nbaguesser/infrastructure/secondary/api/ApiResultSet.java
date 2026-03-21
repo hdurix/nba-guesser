@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.hdurix.nbaguesser.domain.Player;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -14,7 +15,7 @@ class ApiResultSet {
   private static final int FIRST_NAME_INDEX = 2;
   private static final int ROSTER_STATUS_INDEX = 19;
 
-  public static final String PLAYING_ROSTER_STATUS = "1.0";
+  private static final Set<String> ACTIVE_ROSTER_STATUSES = Set.of("1", "1.0");
 
   @JsonProperty
   private Collection<List<String>> rowSet;
@@ -26,8 +27,7 @@ class ApiResultSet {
   private static Predicate<List<String>> isActivePlayer() {
     return row -> {
       String rosterStatus = row.get(ROSTER_STATUS_INDEX);
-
-      return PLAYING_ROSTER_STATUS.equals(rosterStatus);
+      return rosterStatus != null && ACTIVE_ROSTER_STATUSES.contains(rosterStatus);
     };
   }
 
